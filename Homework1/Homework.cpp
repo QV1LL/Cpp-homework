@@ -3,7 +3,7 @@
 using namespace std;
 
 //Time converter
-void Task1() {
+void task1() {
 	int timeInSeconds;
 	cout << "Enter seconds: ";
 	cin >> timeInSeconds;
@@ -17,7 +17,7 @@ void Task1() {
 }
 
 //Cash converter
-void Task2() {
+void task2() {
 	float cash;
 	cout << "Enter value: ";
 	cin >> cash;
@@ -29,7 +29,7 @@ void Task2() {
 
 
 //Caluculation of run speed
-void Task3() {
+void task3() {
 	int speed;
 	float time;
 	int distance;
@@ -53,7 +53,7 @@ void Task3() {
 }
 
 //Day converter
-void Task4() {
+void task4() {
 	int days;
 	cout << "Enter days count: ";
 	cin >> days;
@@ -64,10 +64,10 @@ void Task4() {
 }
 
 int main() {
-	Task1();
-	Task2();
-	Task3();
-	Task4();
+	task1();
+	task2();
+	task3();
+	task4();
 
 	return 0;
 }
