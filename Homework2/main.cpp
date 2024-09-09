@@ -67,8 +67,8 @@ void task3() {
 		cin >> countOfGetLate;
 
 		cout << "You need to write " << (desiredSalary + countOfGetLate * GET_LATE_PRICE) / SALARY_PER_WORK * 100 << " lines.";
-	}
-	else if (choice == 2) {
+
+	} else if (choice == 2) {
 		float desiredSalary;
 		int countOfLines;
 
@@ -78,8 +78,35 @@ void task3() {
 		cout << "Enter count lines: ";
 		cin >> countOfLines;
 
-		cout << "You can get late for a " << (((countOfLines * SALARY_PER_WORK / 100) - desiredSalary) / GET_LATE_PRICE < 0) ? 0 : ((countOfLines * SALARY_PER_WORK / 100) - desiredSalary) / GET_LATE_PRICE;
+		int countOfLate = ((countOfLines * SALARY_PER_WORK / 100) - desiredSalary) / GET_LATE_PRICE;
+
+		if (countOfLate > 0) 
+			cout << "You can get late for a " << countOfLate;
+		else 
+			cout << "You can get late for a " << 0;
+
+	} else if (choice == 3) {
+		int countOfLate;
+		int countOfLines;
+
+		cout << "Enter count of late: ";
+		cin >> countOfLate;
+
+		cout << "Enter count lines: ";
+		cin >> countOfLines;
+
+		float totalSalary = (countOfLines * SALARY_PER_WORK / 100) - (countOfLate * GET_LATE_PRICE);
+
+		if (totalSalary > 0)
+			cout << "Your payment: " << totalSalary;
+		else if (totalSalary < 0)
+			cout << "Your debt will be " << totalSalary;
+		else {
+			cout << "You`ll get nothing";
+		}
 	}
+	else
+		cout << "Your choice is incorrect!";
 }
 
 int main() {
