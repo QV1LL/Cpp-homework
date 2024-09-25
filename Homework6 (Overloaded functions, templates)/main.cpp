@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <time.h> 
+#include <string>
 
 using namespace std;
 
@@ -86,7 +87,40 @@ void bullsAndCows() {
 
 	int targetNumber = (rand() % 10000);
 
-	cout << targetNumber;
+	string targetNumberStr = to_string(targetNumber);
+
+	while (true) {
+		int currentNumber;
+
+		int guessedNums = 0;
+		int guessedAndRightPositionedNums = 0;
+
+		cin >> currentNumber;
+
+		string currentNumberStr = to_string(currentNumber);
+
+		if (currentNumberStr.size() != 4) {
+			cout << "Number length isn`t 4!" << endl;
+			continue;
+		}
+
+		else if (currentNumberStr != targetNumberStr) {
+			for (int i = 0; i < targetNumberStr.size(); i++) {
+				if (currentNumberStr[i] == targetNumberStr[i])
+					guessedAndRightPositionedNums++;
+
+				if (find(targetNumberStr.begin(), targetNumberStr.end(), currentNumberStr[i]) != targetNumberStr.end())
+					guessedNums++;
+			}
+
+			cout << "Guessed nums: " << guessedNums << ", right positioned: " << guessedAndRightPositionedNums << endl;
+		}
+
+		else if (currentNumberStr == targetNumberStr) {
+			cout << "Congratulations!" << endl;
+			break;
+		}
+	}
 }
 
 int main() {
