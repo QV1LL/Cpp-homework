@@ -19,6 +19,10 @@ void copyArrayTo(T* array, T* copyToArray, size_t arraysSize) {
 template <class T>
 void reverseArray(T* array, size_t arraySize) {
 	for (int i = 0; i < arraySize / 2; i++) {
+		swap(*(array + i), *(array + (arraySize - 1 - i)));
+
+		// Assembler insert swap variables
+		/*
 		T el1 = *(array + i);
 		T el2 = *(array + (arraySize - 1 - i));
 
@@ -32,6 +36,7 @@ void reverseArray(T* array, size_t arraySize) {
 
 		*(array + i) = el1;
 		*(array + (arraySize - 1 - i)) = el2;
+		*/
 
 	}
 }
