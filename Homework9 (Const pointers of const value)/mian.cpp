@@ -5,9 +5,9 @@ using namespace std;
 
 //***************************** Task1 *****************************
 template<class T>
-auto getUniquePartOfFirstArray(T& array1, const int array1Size, T& array2, const int array2Size) -> T& {
+auto getUniqueElementsFromFirstArray(T array1[], const int& array1Size, T array2[], const int& array2Size, int& uniqueElementsArraySize) -> T* {
 	int futureArraySize = 0;
-	T** pUniqueElements = new T*[array1Size];
+	T* uniqueElementsIndex = new T[array1Size];
 	
 	for (int i = 0; i < array1Size; i++) {
 		bool isUniqueForBothArrays;
@@ -20,31 +20,100 @@ auto getUniquePartOfFirstArray(T& array1, const int array1Size, T& array2, const
 
 		if (isUniqueForBothArrays) {
 			futureArraySize++;
-			pUniqueElements[i] = &array1[i];
+			uniqueElementsIndex[i] = i;
 		}
-		else {
-			pUniqueElements[i] = nullptr;
-		}
+
+		else uniqueElementsIndex[i] = -1;
 	}
 
+	uniqueElementsArraySize = futureArraySize;
 	T* result = new T[futureArraySize];
 
 	int i = 0;
-	int j = i;
+	int j = 0;
 
 	while (i < futureArraySize) {
-		if (pUniqueElements[j] != nullptr) {
-			*result[i] = *pUniqueElements[j];
+		if (uniqueElementsIndex[j] != -1) {
+			result[i] = array1[uniqueElementsIndex[j]];
 			
-			i++;
-			j++;
+			i++; j++;
 		}
 		else {
 			j++;
 		}
 	}
 
-	return *result;
+	delete[] uniqueElementsIndex;
+
+	return result;
+}
+
+//***************************** Task2 *****************************
+template<class T>
+void writeUniqueElementsIndexInArray(T* uniqueElementsIndex, T array[], const int& arraySize, T compareArray[], const int& compareArraySize, int& futureArraySize) {
+	for (int i = 0; i < arraySize; i++) {
+		bool isUniqueForBothArrays;
+
+		for (int j = 0; j < compareArraySize; j++) {
+			isUniqueForBothArrays = !(array[i] == compareArray[j]);
+
+			if (!isUniqueForBothArrays) break;
+		}
+
+		if (isUniqueForBothArrays) {
+			futureArraySize++;
+			uniqueElementsIndex[i] = i;
+		}
+
+		else uniqueElementsIndex[i] = -1;
+	}
+}
+
+template<class T>
+auto getUniqueElementsFromArrays(T array1[], const int& array1Size, T array2[], const int& array2Size, int& uniqueElementsArraySize) -> T* {
+	int futureArraySize = 0;
+
+	T* uniqueElementsFromFirstArrayIndex = new T[array1Size];
+	T* uniqueElementsFromSecondArrayIndex = new T[array2Size];
+
+	writeUniqueElementsIndexInArray(uniqueElementsFromFirstArrayIndex, array1, array1Size, array2, array2Size, futureArraySize);
+	writeUniqueElementsIndexInArray(uniqueElementsFromSecondArrayIndex, array2, array2Size, array1, array1Size, futureArraySize);
+
+	uniqueElementsArraySize = futureArraySize;
+	T* result = new T[futureArraySize];
+
+	int i = 0;
+	int firstIterator = 0;
+	int secondIterator = 0;
+
+	while (i < futureArraySize) {
+		if (firstIterator < array1Size) {
+			if (uniqueElementsFromFirstArrayIndex[firstIterator] != -1) {
+				result[i] = array1[uniqueElementsFromFirstArrayIndex[firstIterator]];
+
+				i++; firstIterator++;
+			}
+			else {
+				firstIterator++;
+			}
+		}
+
+		else {
+			if (uniqueElementsFromFirstArrayIndex[secondIterator] != -1) {
+				result[i] = array2[uniqueElementsFromSecondArrayIndex[secondIterator]];
+
+				i++; secondIterator++;
+			}
+			else {
+				secondIterator++;
+			}
+		}
+	}
+
+	delete[] uniqueElementsFromFirstArrayIndex;
+	delete[] uniqueElementsFromSecondArrayIndex;
+
+	return result;
 }
 
 int main() {
@@ -56,13 +125,14 @@ int main() {
 	int array1[size1];
 	int array2[size2];
 
-	for (int element : array1)
-		element = rand() % 100;
+	for (int i = 0; i < size1; i++)
+		array1[i] = i + 1;
 
-	for (int element : array2)
-		element = rand() % 100;
-
-	int* array3 = getUniquePartOfFirstArray(array1, size1, array2, size2);
+	for (int i = 0; i < size2; i++)
+		array2[i] = i + 4;
+	
+	int size3;
+	int* array3 = getUniqueElementsFromArrays(array1, size1, array2, size2, size3);
 
 	for (int el : array1)
 		cout << el << " ";
@@ -74,7 +144,7 @@ int main() {
 
 	cout << endl;
 
-	for (int i = 0; i < sizeof(array3) / sizeof(int); i++)
+	for (int i = 0; i < size3; i++)
 		cout << array3[i] << " ";
 
 	return 0;
