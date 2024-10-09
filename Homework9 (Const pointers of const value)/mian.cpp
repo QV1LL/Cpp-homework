@@ -50,7 +50,7 @@ auto getUniqueElementsFromFirstArray(T array1[], const int& array1Size, T array2
 
 //***************************** Task2 *****************************
 template<class T>
-void writeUniqueElementsIndexInArray(T* uniqueElementsIndex, T array[], const int& arraySize, T compareArray[], const int& compareArraySize, int& futureArraySize) {
+auto writeUniqueElementsIndexInArray(T* uniqueElementsIndex, T array[], const int& arraySize, T compareArray[], const int& compareArraySize, int& futureArraySize) -> void {
 	for (int i = 0; i < arraySize; i++) {
 		bool isUniqueForBothArrays;
 
@@ -99,7 +99,7 @@ auto getUniqueElementsFromArrays(T array1[], const int& array1Size, T array2[], 
 		}
 
 		else {
-			if (uniqueElementsFromFirstArrayIndex[secondIterator] != -1) {
+			if (uniqueElementsFromSecondArrayIndex[secondIterator] != -1) {
 				result[i] = array2[uniqueElementsFromSecondArrayIndex[secondIterator]];
 
 				i++; secondIterator++;
@@ -119,8 +119,8 @@ auto getUniqueElementsFromArrays(T array1[], const int& array1Size, T array2[], 
 int main() {
 	srand(time(0));
 
-	const int size1 = 5;
-	const int size2 = 5;
+	const int size1 = 100;
+	const int size2 = 100;
 
 	int array1[size1];
 	int array2[size2];
