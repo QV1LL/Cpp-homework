@@ -4,8 +4,11 @@
 
 using namespace std;
 
+template<class T>
+using arythmeticAction = function<T(T[], const int&)>;
+
 //*********************************************** Task1 ***********************************************
-template <class T>
+template<class T>
 auto getMax(T array[], const int& size) -> T {
 	int max = array[0];
 
@@ -15,7 +18,7 @@ auto getMax(T array[], const int& size) -> T {
 	return max;
 }
 
-template <class T>
+template<class T>
 auto getMin(T array[], const int& size) -> T {
 	int min = array[0];
 
@@ -25,7 +28,7 @@ auto getMin(T array[], const int& size) -> T {
 	return min;
 }
 
-template <class T>
+template<class T>
 auto getAverage(T array[], const int& size) -> T {
 	int average = 0;
 
@@ -36,7 +39,7 @@ auto getAverage(T array[], const int& size) -> T {
 }
 
 template<class T>
-auto action(T array1[], const int& array1Size, T array2[], const int& array2Size, function<T(T[], const int&)> func) -> T {
+auto action(T* array1, const int& array1Size, T* array2, const int& array2Size, arythmeticAction<T> func) -> T {
 	T value1 = func(array1, array1Size);
 	T value2 = func(array2, array2Size);
 
@@ -44,8 +47,8 @@ auto action(T array1[], const int& array1Size, T array2[], const int& array2Size
 	return func(values, 2);
 }
 
-template <class T>
-auto getUserChoice(T array[]) -> function<T(T[], const int&)> {
+template<class T>
+auto getUserChoice(T array[]) -> arythmeticAction<T> {
 	string choice;
 	
 	while (true) {
