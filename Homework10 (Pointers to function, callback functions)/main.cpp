@@ -9,7 +9,7 @@ using arythmeticAction = function<T(T[], const int&)>;
 
 //*********************************************** Task1 ***********************************************
 template<class T>
-auto getMax(T array[], const int& size) -> T {
+auto getMax(T* array, const int& size) -> T {
 	int max = array[0];
 
 	for (int i = 0; i < size; i++)
@@ -19,7 +19,7 @@ auto getMax(T array[], const int& size) -> T {
 }
 
 template<class T>
-auto getMin(T array[], const int& size) -> T {
+auto getMin(T* array, const int& size) -> T {
 	int min = array[0];
 
 	for (int i = 0; i < size; i++)
@@ -29,7 +29,7 @@ auto getMin(T array[], const int& size) -> T {
 }
 
 template<class T>
-auto getAverage(T array[], const int& size) -> T {
+auto getAverage(T* array, const int& size) -> T {
 	int average = 0;
 
 	for (int i = 0; i < size; i++)
