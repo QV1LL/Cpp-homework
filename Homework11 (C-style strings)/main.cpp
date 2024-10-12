@@ -23,15 +23,12 @@ auto deleteCharsInStr(char* str, const char& symbol) -> void {
 	if (!symbol) return;
 	
 	bool formmatedString = true;
-	short offSet = 0;
 
 	for (char* pStr = str; *pStr; pStr++) {
-		if (*pStr == symbol) {
-			offSet = 1;
+		if (*pStr == symbol)
 			formmatedString = false;
-		}
 
-		char* pNextCharInStr = pStr + offSet;
+		char* pNextCharInStr = pStr + !formmatedString;
 
 		*pStr = *pNextCharInStr;
 	}
