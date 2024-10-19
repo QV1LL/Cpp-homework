@@ -16,7 +16,7 @@ auto replaceWordInText(string& text, string_view targetWord, string_view replace
 }
 
 //***************************************** Task2 *****************************************
-auto formateSentences(string& text) {
+auto formateSentences(string& text) -> void {
 	char sentenceSeparators[] = ".!?";
 	bool letterToUpper = true;
 
