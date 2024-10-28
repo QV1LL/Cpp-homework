@@ -10,7 +10,7 @@ using namespace std;
 static const char alphanum[] =
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-auto genRandomString(int stringLength) -> string
+auto getRandomString(int stringLength) -> string
 {
 	string result;
 
@@ -63,7 +63,7 @@ int main () {
 	for (int i = 0; i < library->getBooksCount(); i++) {
 		Book* book = library->getBook(i);
 
-		book->setStatements(genRandomString(8), genRandomString(8), genRandomString(8));
+		book->setStatements(getRandomString(8), getRandomString(8), getRandomString(8));
 	}
 
 	library->sortBooksByTitle();
