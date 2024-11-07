@@ -20,27 +20,27 @@ public:
 		this->publisher = "???";
 	}
 
-Book(string title, string author, string publisher) {
-	this->title = title;
-	this->author = author;
-	this->publisher = publisher;
-}
+	Book(string title, string author, string publisher) {
+		this->title = title;
+		this->author = author;
+		this->publisher = publisher;
+	}
 
-auto setStatements(string title, string author, string publisher) -> void {
-	this->title = title;
-	this->author = author;
-	this->publisher = publisher;
-}
+	auto setStatements(string title, string author, string publisher) -> void {
+		this->title = title;
+		this->author = author;
+		this->publisher = publisher;
+	}
 
-auto getTitle() -> string { return this->title; }
-auto getAuthor() -> string { return this->author; }
-auto getPublisher() -> string { return this->publisher; }
+	auto getTitle() -> string { return this->title; }
+	auto getAuthor() -> string { return this->author; }
+	auto getPublisher() -> string { return this->publisher; }
 
-auto setTitle(string title) -> void { this->title = title; }
-auto setAuthor(string author) -> void { this->author = author; }
-auto setPublisher(string publisher) -> void { this->publisher = publisher; }
+	auto setTitle(string title) -> void { this->title = title; }
+	auto setAuthor(string author) -> void { this->author = author; }
+	auto setPublisher(string publisher) -> void { this->publisher = publisher; }
 
-friend struct Library;
+	friend struct Library;
 };
 
 struct Library {
