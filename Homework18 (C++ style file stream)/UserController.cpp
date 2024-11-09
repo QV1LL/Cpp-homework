@@ -24,52 +24,44 @@ auto UserController::printEmployees() -> void {
 }
 
 auto UserController::hireEmployee() -> void {
-	char lastName[64];
+	char lastName[64]{0};
 	int age = 0;
 
 	std::cout << "Enter new employee last name: ";
+	std::cin.ignore();
 	std::cin.getline(lastName, 64);
-	
-	try {
-		std::cout << "Enter new employee age: ";
-		std::cin >> age;
-	}
-	catch (std::exception e) {
-		std::cerr << e.what();
-	}
+
+	std::cout << "Enter new employee age: ";
+	std::cin >> age;
 
 	if (age < 16) age = 16;
 
-	Employee* newEmployee = new Employee(age, *(new std::string(lastName)));
+	Employee* newEmployee = new Employee(age, *(new std::string((lastName[0] != 0) ? lastName : "employee")));
 
 	this->employeesAccountingSystem->employees.push_back(*newEmployee);
 }
 
 auto UserController::fireEmployee(int id) -> void {
-	auto employees = this->employeesAccountingSystem->employees;
+	if (id >= employeesAccountingSystem->employees.size() || id < 0) return;
 
-	employees.erase(employees.begin() + id);
+	this->employeesAccountingSystem->employees.erase(this->employeesAccountingSystem->employees.begin() + id);
 }
 
 auto UserController::editEmployee(int id) -> void {
-	char lastName[64];
+	if (id >= employeesAccountingSystem->employees.size() || id < 0) return;
+	
+	char lastName[64]{0};
 	int age = 0;
 
-	std::cout << "Enter new employee " << id << " last name: ";
+	std::cout << "Enter employee " << id + 1 << " last name: ";
+	std::cin.ignore();
 	std::cin.getline(lastName, 64);
 
-	try {
-		std::cout << "Enter new employee " << id << " age: ";
-		std::cin >> age;
-	}
-	catch (std::exception e) {
-		std::cerr << e.what();
-	}
+	std::cout << "Enter employee " << id + 1 << " age: ";
+	std::cin >> age;
 
 	if (age < 16) age = 16;
 
-	auto employees = this->employeesAccountingSystem->employees;
-
-	employees[id].setAge(age);
-	employees[id].setLastName(lastName);
+	this->employeesAccountingSystem->employees[id].setAge(age);
+	this->employeesAccountingSystem->employees[id].setLastName((lastName[0] != 0) ? lastName : "employee");
 }

@@ -45,7 +45,7 @@ int main() {
 			std::cout << "Enter id: ";
 			std::cin >> id;
 
-			userController->fireEmployee(id);
+			userController->fireEmployee(id - 1);
 		}
 
 		else if (userChoice == "edit") {
@@ -53,13 +53,13 @@ int main() {
 			std::cout << "Enter id: ";
 			std::cin >> id;
 
-			userController->editEmployee(id);
+			userController->editEmployee(id - 1);
 		}
 		else if (userChoice == "exit")
 			break;
 
 		else
-			std::cout << "Incorrect input!'\n";
+			std::cout << "Incorrect input!\n";
 	}
 	
 
