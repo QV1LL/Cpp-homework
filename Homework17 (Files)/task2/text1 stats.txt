@@ -1,0 +1,5 @@
+Count of symbols: 227
+Count of rows: 5
+Count of vowels: 75
+Count of consonant: 152
+Count of digits: 0

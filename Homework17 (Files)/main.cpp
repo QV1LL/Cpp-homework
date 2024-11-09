@@ -1,25 +1,53 @@
 #include <iostream>
+#include <cstdio>
+#include <string>
+#include <string_view>
 
-using namespace std;
+#include "main.h"
 
-auto printEqualsOfTwoFiles(FILE* file1, FILE* file2) -> void {
-	char file1Text[256];
-	char file2Text[256];
+// Task 1 is located in main.h and FileStatusChecker.cpp files;
 
-	while ((fscanf_s(file1, "%s[^\n]", &file1Text) != 0)
-		&& (fscanf_s(file2, "%s[^\n]", &file2Text) != 0)) {
-		if (file1 != file2) {
-			printf("First file row: %s\nSecond file row: %s\n", file1Text, file2Text);
-		}
-	}
-}
+// Task 2 is located in main.h and FileStats.cpp files;
+
+// Task 3 is located in main.h and CaesarEncoder.cpp files;
 
 int main() {
-	FILE* file1;
-	FILE* file2;
+	//Task1 test
+	std::string file1Name = "task1\\text1.txt";
+	std::string file2Name = "task1\\text2.txt";
 
-	fopen_s(&file1, "task1\\text1.txt", "r");
-	fopen_s(&file2, "task1\\text2.txt", "r");
+	FilesStatusChecker::printEqualsOfTwoFiles(file1Name, file2Name);
 
-	printEqualsOfTwoFiles(file1, file2);
+
+	//Task2 test
+	FileStats fileStats{"task2\\text1.txt"};
+
+	fileStats.writeStatsToFile("task2\\text1 stats.txt");
+
+
+	//Task3 test
+	CaesarEncoder* encoder = CaesarEncoder::getInstance();
+
+	FILE* file;
+
+	if (fopen_s(&file, "task3\\text.txt", "r"))
+		return 1;
+
+	std::fseek(file, 0, SEEK_END);
+	long fileSize = std::ftell(file);
+	std::rewind(file);
+
+	std::string fileText(fileSize, '\0');
+	std::fread(fileText.data(), 1, fileSize, file);
+	fclose(file);
+
+	fileText = encoder->encodeText(fileText, 3);
+
+	if (fopen_s(&file, "task3\\encodedText.txt", "w"))
+		return 1;
+
+	fputs(fileText.c_str(), file);
+	fclose(file);
+
+	return 0;
 }
