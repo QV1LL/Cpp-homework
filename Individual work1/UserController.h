@@ -16,11 +16,8 @@ public:
 	static auto getInstance(GameLibrary* gameLibrary, const std::string& savingFileName) -> UserController*;
 
 	auto printGames() -> void;
-
 	auto addGame() -> void;
-
 	auto editGame(int id) -> void;
-
 	auto deleteById(int id) -> void;
 
 	auto save() -> void;

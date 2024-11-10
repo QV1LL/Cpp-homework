@@ -30,16 +30,16 @@ auto Game::printStats() -> void {
 	std::cout << "\tGame: " << this->title << '\n'
 		<< "\tDeveloper: " << this->developer << '\n'
 		<< "\tPublisher: " << this->publisher << '\n'
-		<< "\tOnline platform: " << platforms[(int)this->platform] << '\n'
+		<< "\tOnline platform: " << platformsNames[(int)this->platform] << '\n'
 		<< "\tRealise: " << this->realiseYear << '\n';
 }
 
-auto Game::getSerialized() -> std::string {
+auto Game::serialize() -> std::string {
 	return this->title + "$"
 		+ this->developer + "$"
 		+ this->publisher + "$"
 		+ std::to_string(this->realiseYear) + "$"
-		+ platforms[(int)this->platform];
+		+ platformsNames[(int)this->platform];
 }
 
 auto Game::deserialize(const std::string& serializedObject) -> Game {
@@ -50,7 +50,7 @@ auto Game::deserialize(const std::string& serializedObject) -> Game {
 		std::stoi(serializedParts[3]));
 
 	deserializedGame.publisher = serializedParts[2];
-	deserializedGame.platform = (Platform)platforms->find(serializedParts[4]);
+	deserializedGame.platform = (Platform)platformsNames->find(serializedParts[4]);
 
 	return deserializedGame;
 }

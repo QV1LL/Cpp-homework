@@ -28,25 +28,48 @@ auto UserController::addGame() -> void {
 
 	std::cout << "Enter title: ";
 	std::cin.getline(title, 64);
-	std::cin.ignore();
 
 	std::cout << "Enter developer: ";
 	std::cin.getline(developer, 64);
-	std::cin.ignore();
 
-	std::cout << "Enter realise year: ";
-	std::cin >> realiseYear;
+	while (true) {
+		try {
+			std::cout << "Enter realiseYear: ";
+			std::cin >> realiseYear;
+
+			break;
+		}
+		catch (std::exception e) {
+			std::cerr << "Incorrect value! *_*";
+		}
+	}
 
 	Game game{title, developer, realiseYear};
 
 	this->gameLibrary->add(game);
+
+	std::cout << "\t" << title << " added!\n" << '\n';
 }
 
 auto UserController::deleteById(int id) -> void {
+	if (id < 0 || this->gameLibrary->games.size() <= id) {
+		std::cerr << "Incorrect id! *_*";
+		return;
+	}
+	
+	std::string removedTitle = this->gameLibrary->games[id].title;
+
 	this->gameLibrary->deleteById(id);
+
+	std::cout << removedTitle << " removed!\n" << '\n';
 }
 
 auto UserController::editGame(int id) -> void {
+	if (id < 0 || this->gameLibrary->games.size() <= id) {
+		std::cerr << "Incorrect id! *_*";
+		return;
+	}
+
 	char title[64]{ 0 };
 	char developer[64]{ 0 };
 	char publisher[64]{ 0 };
@@ -66,10 +89,19 @@ auto UserController::editGame(int id) -> void {
 	std::cout << "Enter game " << id + 1 << " online platform: ";
 	std::cin.getline(stringPlatform, 64);
 
-	Platform platform = (Platform)((int)platforms->find(stringPlatform));
+	Platform platform = (Platform)((int)platformsNames->find(stringPlatform));
 
-	std::cout << "Enter game " << id + 1 << " realiseYear: ";
-	std::cin >> realiseYear;
+	while (true) {
+		try {
+			std::cout << "Enter game " << id + 1 << " realiseYear: ";
+			std::cin >> realiseYear;
+
+			break;
+		}
+		catch (std::exception e) {
+			std::cerr << "Incorrect value! *_*";
+		}
+	}
 
 	if (realiseYear < 1980) realiseYear = 1980;
 
@@ -78,9 +110,14 @@ auto UserController::editGame(int id) -> void {
 	this->gameLibrary->games[id].publisher = publisher;
 	this->gameLibrary->games[id].platform = platform;
 	this->gameLibrary->games[id].realiseYear = realiseYear;
+
+	std::cout << "\tGame " << id + 1 << " edited!\n" << '\n';
 }
 
 auto UserController::save() -> void {
 	DataSaver* dataSaver = DataSaver::getInstance();
 	dataSaver->saveData(this->gameLibrary, this->savingFileName);
+
+	std::cout << "\tSaving data... -_-\n";
+	std::cout << "\tData saved!\n" << '\n';
 }

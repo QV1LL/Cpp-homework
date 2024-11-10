@@ -25,7 +25,7 @@ auto DataSaver::saveData(GameLibrary* gameLibrary,
 	}
 
 	for (Game game : gameLibrary->games) {
-		saveFile << game.getSerialized() + "\n";
+		saveFile << game.serialize() + "\n";
 	}
 
 	saveFile.close();
