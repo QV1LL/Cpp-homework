@@ -2,8 +2,10 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <algorithm>
 
 #include "Game.h"
+#include "GameBuilder.h"
 
 auto split(const std::string& str, char delimiter) -> std::vector<std::string> {
 	std::vector<std::string> tokens;
@@ -18,12 +20,6 @@ auto split(const std::string& str, char delimiter) -> std::vector<std::string> {
 
 	tokens.push_back(str.substr(start));
 	return tokens;
-}
-
-Game::Game(const std::string_view title, const std::string_view developer, int realiseYear) {
-	this->title = (!title.empty()) ? title : "unknown";
-	this->developer = (!developer.empty()) ? developer : "unknown";
-	this->realiseYear = (realiseYear >= 1980) ? realiseYear : 1980;
 }
 
 auto Game::printStats() -> void {
@@ -45,12 +41,12 @@ auto Game::serialize() -> std::string {
 auto Game::deserialize(const std::string& serializedObject) -> Game {
 	auto serializedParts = split(serializedObject, '$');
 
-	Game deserializedGame(serializedParts[0],
-		serializedParts[1],
-		std::stoi(serializedParts[3]));
+	GameBuilder* gameBuilder = new GameBuilder();
+	gameBuilder->setTitle(serializedParts[0])
+		.setDeveloper(serializedParts[1])
+		.setPublisher(serializedParts[2])
+		.setRealiseYear(std::stoi(serializedParts[3]))
+		.setPlatform((Platform)std::distance(platformsNames.begin(), std::find(platformsNames.begin(), platformsNames.end(), serializedParts[4])));
 
-	deserializedGame.publisher = serializedParts[2];
-	deserializedGame.platform = (Platform)platformsNames->find(serializedParts[4]);
-
-	return deserializedGame;
+	return gameBuilder->getProduct();
 }

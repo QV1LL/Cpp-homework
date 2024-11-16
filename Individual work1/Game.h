@@ -2,8 +2,9 @@
 
 #include <iostream>
 #include <string_view>
+#include <vector>
 
-static const std::string platformsNames[] = {
+static const std::vector<std::string> platformsNames = {
 	"Steam",
 	"Epic games",
 	"Origin",
@@ -17,14 +18,14 @@ enum class Platform {
 
 struct Game {
 public:
-	std::string title;
+	std::string title = "unknown";
 	std::string developer = "unknown";
 	std::string publisher = "unknown";
 
 	Platform platform = Platform::STEAM;
 	int realiseYear = 2000;
 
-	Game(const std::string_view title, const std::string_view developer, int realiseYear);
+	Game() = default;
 
 	auto printStats() -> void;
 	auto serialize() -> std::string;

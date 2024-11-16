@@ -2,6 +2,9 @@
 
 #include "UserController.h"
 #include "DataSaver.h"
+#include "GameBuilder.h"
+
+void printColored(std::string_view text, std::string_view color);
 
 UserController* UserController::instance = nullptr;
 
@@ -33,32 +36,36 @@ auto UserController::addGame() -> void {
 	std::cin.getline(developer, 64);
 
 	while (true) {
-		try {
-			std::cout << "Enter realiseYear: ";
-			std::cin >> realiseYear;
+		std::cout << "Enter game realiseYear: ";
+		std::cin >> realiseYear;
 
-			break;
+		if (std::cin.fail()) {
+			printColored("Incorrect value! *_*", "\033[31m");
+			std::cin.clear();
+			std::cin.ignore('\n');
+			continue;
 		}
-		catch (std::exception e) {
-			std::cerr << "Incorrect value! *_*";
-		}
+
+		break;
 	}
 
-	Game game{title, developer, realiseYear};
+	GameBuilder* gameBuilder = new GameBuilder();
+	gameBuilder->setTitle(title)
+		.setDeveloper(developer)
+		.setRealiseYear(realiseYear);
 
-	this->gameLibrary->add(game);
+	this->gameLibrary->add(gameBuilder->getProduct());
 
 	std::cout << "\t" << title << " added!\n" << '\n';
 }
 
 auto UserController::deleteById(int id) -> void {
 	if (id < 0 || this->gameLibrary->games.size() <= id) {
-		std::cerr << "Incorrect id! *_*";
+		printColored("Incorrect id! *_*", "\033[31m");
 		return;
 	}
 	
 	std::string removedTitle = this->gameLibrary->games[id].title;
-
 	this->gameLibrary->deleteById(id);
 
 	std::cout << removedTitle << " removed!\n" << '\n';
@@ -66,7 +73,7 @@ auto UserController::deleteById(int id) -> void {
 
 auto UserController::editGame(int id) -> void {
 	if (id < 0 || this->gameLibrary->games.size() <= id) {
-		std::cerr << "Incorrect id! *_*";
+		printColored("Incorrect id! *_*", "\033[31m");
 		return;
 	}
 
@@ -89,18 +96,28 @@ auto UserController::editGame(int id) -> void {
 	std::cout << "Enter game " << id + 1 << " online platform: ";
 	std::cin.getline(stringPlatform, 64);
 
-	Platform platform = (Platform)((int)platformsNames->find(stringPlatform));
-
-	while (true) {
-		try {
-			std::cout << "Enter game " << id + 1 << " realiseYear: ";
-			std::cin >> realiseYear;
-
+	int platformIndex = -1;
+	for (int i = 0; i < platformsNames.size(); i++) {
+		if (strcmp(platformsNames[i].c_str(), stringPlatform) == 0) {
+			platformIndex = i;
 			break;
 		}
-		catch (std::exception e) {
-			std::cerr << "Incorrect value! *_*";
+	}
+
+	Platform platform = static_cast<Platform>(platformIndex);
+
+	while (true) {
+		std::cout << "Enter game " << id + 1 << " realiseYear: ";
+		std::cin >> realiseYear;
+
+		if (std::cin.fail()) {
+			printColored("Incorrect value! *_*", "\033[31m");
+			std::cin.clear();
+			std::cin.ignore('\n');
+			continue;
 		}
+
+		break;
 	}
 
 	if (realiseYear < 1980) realiseYear = 1980;
