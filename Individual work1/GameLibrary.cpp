@@ -1,7 +1,10 @@
 #include <iostream>
+#include <string>
 
 #include "GameLibrary.h"
 #include "Game.h"
+
+void printColored(std::string_view text, std::string_view color);
 
 auto GameLibrary::add(Game game) -> void {
 	this->games.push_back(game);
@@ -29,8 +32,8 @@ auto GameLibrary::printGames() -> void {
 	int iterable = 0;
 
 	for (Game& game : this->games) {
-		std::cout << "Game " << ++iterable <<" stats: {\n\n";
+		printColored("Game " + std::to_string(++iterable) + " stats: {\n\n", "\033[34m");
 		game.printStats();
-		std::cout << "}\n\n";
+		printColored("}\n\n", "\033[34m");
 	}
 }

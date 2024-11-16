@@ -44,7 +44,7 @@ auto Application::start() -> void {
 			int id = -1;
 
 			while (true) {
-				std::cout << "Enter an id: ";
+				printColored("Enter an id: ", "\033[33m");
 				std::cin >> id;
 
 				if (std::cin.fail()) {
@@ -64,7 +64,7 @@ auto Application::start() -> void {
 			int id = -1;
 
 			while (true) {
-				std::cout << "Enter an id: ";
+				printColored("Enter an id: ", "\033[33m");
 				std::cin >> id;
 
 				if (std::cin.fail()) {

@@ -7,6 +7,8 @@
 #include "Game.h"
 #include "GameBuilder.h"
 
+void printColored(std::string_view text, std::string_view color);
+
 auto split(const std::string& str, char delimiter) -> std::vector<std::string> {
 	std::vector<std::string> tokens;
 	size_t start = 0;
@@ -23,11 +25,11 @@ auto split(const std::string& str, char delimiter) -> std::vector<std::string> {
 }
 
 auto Game::printStats() -> void {
-	std::cout << "\tGame: " << this->title << '\n'
-		<< "\tDeveloper: " << this->developer << '\n'
-		<< "\tPublisher: " << this->publisher << '\n'
-		<< "\tOnline platform: " << platformsNames[(int)this->platform] << '\n'
-		<< "\tRealise: " << this->realiseYear << '\n';
+	std::cout << "\033[35m" << "\tGame: " << "\033[0m" << this->title << '\n'
+		<< "\033[35m" << "\tDeveloper: " << "\033[0m" << this->developer << '\n'
+		<< "\033[35m" << "\tPublisher: " << "\033[0m" << this->publisher << '\n'
+		<< "\033[35m" << "\tOnline platform: " << "\033[0m" << platformsNames[(int)this->platform] << '\n'
+		<< "\033[35m" << "\tRealise: " << "\033[0m" << this->realiseYear << '\n';
 }
 
 auto Game::serialize() -> std::string {

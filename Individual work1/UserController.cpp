@@ -77,64 +77,95 @@ auto UserController::editGame(int id) -> void {
 		return;
 	}
 
-	char title[64]{ 0 };
-	char developer[64]{ 0 };
-	char publisher[64]{ 0 };
-	char stringPlatform[64]{ 0 };
-	int realiseYear = 1980;
-
-	std::cout << "Enter game " << id + 1 << " title: ";
-	std::cin.ignore();
-	std::cin.getline(title, 64);
-
-	std::cout << "Enter game " << id + 1 << " developer: ";
-	std::cin.getline(developer, 64);
-
-	std::cout << "Enter game " << id + 1 << " publisher: ";
-	std::cin.getline(publisher, 64);
-
-	std::cout << "Enter game " << id + 1 << " online platform: ";
-	std::cin.getline(stringPlatform, 64);
-
-	int platformIndex = -1;
-	for (int i = 0; i < platformsNames.size(); i++) {
-		if (strcmp(platformsNames[i].c_str(), stringPlatform) == 0) {
-			platformIndex = i;
-			break;
-		}
-	}
-
-	Platform platform = static_cast<Platform>(platformIndex);
-
 	while (true) {
-		std::cout << "Enter game " << id + 1 << " realiseYear: ";
-		std::cin >> realiseYear;
+		std::string userChoice;
 
-		if (std::cin.fail()) {
-			printColored("Incorrect value! *_*", "\033[31m");
-			std::cin.clear();
-			std::cin.ignore('\n');
-			continue;
+		printColored("EDIT MODE", "\033[36m");
+		std::cout << "\tEdit title: title," << '\n'
+			<< "\tEdit developer: developer," << '\n'
+			<< "\tEdit publisher: publisher," << '\n'
+			<< "\tEdit platform: platform," << '\n'
+			<< "\tEdit realise year: year." << '\n'
+			<< "\tExit from edit mode: exit." << '\n';
+
+		std::cin >> userChoice;
+		std::cin.ignore();
+
+		if (userChoice == "title") {
+			char title[64]{ 0 };
+
+			std::cout << "Enter game " << id + 1 << " title: ";
+			std::cin.getline(title, 64);
+
+			this->gameLibrary->games[id].title = title;
 		}
+		else if (userChoice == "developer") {
+			char developer[64]{ 0 };
 
-		break;
+			std::cout << "Enter game " << id + 1 << " developer: ";
+			std::cin.getline(developer, 64);
+
+			this->gameLibrary->games[id].developer = developer;
+		}
+		else if (userChoice == "publisher") {
+			char publisher[64]{ 0 };
+
+			std::cout << "Enter game " << id + 1 << " publisher: ";
+			std::cin.getline(publisher, 64);
+
+			this->gameLibrary->games[id].publisher = publisher;
+		}
+		else if (userChoice == "platform") {
+			char stringPlatform[64]{ 0 };
+
+			std::cout << "Enter game " << id + 1 << " online platform: ";
+			std::cin.getline(stringPlatform, 64);
+
+			int platformIndex = -1;
+			for (int i = 0; i < platformsNames.size(); i++) {
+				if (strcmp(platformsNames[i].c_str(), stringPlatform) == 0) {
+					platformIndex = i;
+					break;
+				}
+			}
+
+			Platform platform = static_cast<Platform>(platformIndex);
+
+
+			this->gameLibrary->games[id].platform = (platformIndex != -1) ?
+				platform : this->gameLibrary->games[id].platform;
+		}
+		else if (userChoice == "year") {
+			int realiseYear;
+
+			while (true) {
+				std::cout << "Enter game " << id + 1 << " realiseYear: ";
+				std::cin >> realiseYear;
+
+				if (std::cin.fail()) {
+					printColored("Incorrect value! *_*", "\033[31m");
+					std::cin.clear();
+					std::cin.ignore('\n');
+					continue;
+				}
+
+				break;
+			}
+
+			this->gameLibrary->games[id].realiseYear = (realiseYear < 1980) ?
+				this->gameLibrary->games[id].realiseYear : realiseYear;
+		}
+		else if (userChoice == "exit")
+			break;
+		else
+			printColored("Incorrect input! *_*", "\033[31m");
 	}
-
-	if (realiseYear < 1980) realiseYear = 1980;
-
-	this->gameLibrary->games[id].title = title;
-	this->gameLibrary->games[id].developer = developer;
-	this->gameLibrary->games[id].publisher = publisher;
-	this->gameLibrary->games[id].platform = platform;
-	this->gameLibrary->games[id].realiseYear = realiseYear;
-
-	std::cout << "\tGame " << id + 1 << " edited!\n" << '\n';
 }
 
 auto UserController::save() -> void {
 	DataSaver* dataSaver = DataSaver::getInstance();
 	dataSaver->saveData(this->gameLibrary, this->savingFileName);
-
-	std::cout << "\tSaving data... -_-\n";
-	std::cout << "\tData saved!\n" << '\n';
+	
+	printColored("\tSaving data... -_-", "\033[32m");
+	printColored("\tData saved!\n", "\033[32m");
 }
