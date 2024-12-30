@@ -11,6 +11,10 @@ namespace Project {
 	{
 	private:
 
+		int id;
+		static int ID_COUNTER;
+		static int MAX_CHILDREN_COUNT;
+
 		Parent father;
 		Parent mother;
 
@@ -19,6 +23,13 @@ namespace Project {
 
 	public:
 
+		Family(Parent father, Parent mother);
+
+		void addChild();
+		void addPet();
+
+		void editChild();
+		void editPet();
 
 	};
 }

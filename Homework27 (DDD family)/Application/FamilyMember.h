@@ -36,11 +36,14 @@ namespace Project {
 				this->nationality = nationality;
 		}
 
+		FamilyMember(json serializedObject);
+
 		Name getName() const { return this->name; }
 		Date getBirthDate() const { return this->birthDate; }
 		PhoneNumber getPhoneNumber() const { return this->phoneNumber; }
 		std::string getNationality() const { return this->nationality; }
 
+		virtual json serialize();
 	};
 }
 
