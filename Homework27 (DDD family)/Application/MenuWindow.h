@@ -26,23 +26,24 @@ namespace Project {
 			}
 		}
 	private: System::Windows::Forms::Label^ label1;
-	private: System::Windows::Forms::Button^ button1;
-	protected:
-
-	protected:
+	private: System::Windows::Forms::Button^ addFamilyButton;
+	private: System::Windows::Forms::Panel^ panel;
 
 	private:
 		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
 		void InitializeComponent(void);
+
+		void AddFamily(Panel^ panel);
 #pragma endregion
 
 	private: System::Void MenuWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
-	private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
-	}
-	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-	}
+
+	private: System::Void AddFamilyButton_Click(System::Object^ sender, System::EventArgs^ e);
+
+	private: System::Void RemoveButtonClick(System::Object^ sender, System::EventArgs^ e);
+
 	};
 }
