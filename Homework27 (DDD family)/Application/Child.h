@@ -24,7 +24,11 @@ namespace Project {
 				this->educationPlace = educationPlace;
 		}
 
+		explicit Child(const json& serializedObject);
+
 		std::string getEducationPlaceTitle() const { return this->educationPlace; }
+
+		json serialize() const override;
 	};
 }
 

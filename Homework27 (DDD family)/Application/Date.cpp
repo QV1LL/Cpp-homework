@@ -3,7 +3,10 @@
 #include <chrono>
 #include <ctime>
 
+#include "json.hpp"
 #include "Date.h"
+
+using json = nlohmann::json;
 
 namespace Project {
 	int getCurrentYear() {
@@ -31,9 +34,25 @@ Project::Date::Date(uint16_t day, uint16_t month, uint16_t year)
 	this->year = year;
 }
 
+Project::Date::Date(const json& serializedObject)
+{
+	this->day = serializedObject["day"];
+	this->month = serializedObject["month"];
+	this->year = serializedObject["year"];
+}
+
 Project::Date::operator std::string() const 
 {
 	return std::to_string(this->day) + "." +
 		std::to_string(this->month) + "." +
 		std::to_string(this->year);
+}
+
+json Project::Date::serialize() const
+{
+	return {
+		{"day", this->day},
+		{"month", this->month},
+		{"year", this->year},
+	};
 }

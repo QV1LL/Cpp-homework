@@ -24,6 +24,10 @@ namespace Project {
 				this->job = job;
 		}
 
+		explicit Parent(const json& serializedObject);
+
 		std::string getJob() const { return this->job; }
+
+		json serialize() const override;
 	};
 }

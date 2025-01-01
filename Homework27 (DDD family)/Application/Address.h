@@ -1,5 +1,9 @@
 #pragma once
 
+#include "json.hpp"
+
+using json = nlohmann::json;
+
 namespace Project {
 
 	class Address
@@ -26,8 +30,12 @@ namespace Project {
 			this->flatNumber = flatNumber;
 		}
 
+		explicit Address(const json& serializedObject);
+
 		operator std::string() const;
 		std::ostream& operator<<(std::ostream& out) const;
+
+		json serialize() const;
 	};
 }
 

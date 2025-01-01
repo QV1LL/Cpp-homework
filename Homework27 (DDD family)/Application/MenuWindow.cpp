@@ -1,6 +1,12 @@
 ﻿#include "MenuWindow.h"
 #include <Windows.h>
 
+#include "Date.h"
+#include "Name.h"
+#include "PhoneNumber.h"
+#include "Address.h"
+#include "Parent.h"
+
 using namespace Project;
 
 [STAThreadAttribute]
@@ -28,7 +34,7 @@ void Project::MenuWindow::InitializeComponent(void)
     this->label1->Name = L"label1";
     this->label1->Size = System::Drawing::Size(440, 31);
     this->label1->TabIndex = 0;
-    this->label1->Text = L"Choose family or create new one";
+    this->label1->Text = L"Choose existing family or add new";
     this->label1->Click += gcnew System::EventHandler(this, &MenuWindow::label1_Click);
     // 
     // button1
@@ -43,6 +49,7 @@ void Project::MenuWindow::InitializeComponent(void)
     this->button1->TabIndex = 1;
     this->button1->Text = L"Add";
     this->button1->UseVisualStyleBackColor = false;
+    this->button1->Click += gcnew System::EventHandler(this, &MenuWindow::button1_Click);
     // 
     // MenuWindow
     // 

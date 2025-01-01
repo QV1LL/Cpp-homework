@@ -1,5 +1,9 @@
 #pragma once
 
+#include "json.hpp"
+
+using json = nlohmann::json;
+
 namespace Project {
 
 	class Name
@@ -20,8 +24,12 @@ namespace Project {
 			this->lastName = lastName;
 		}
 
+		explicit Name(const json& serializedObject);
+
 		operator std::string() const { return this->firstName + " " + this->lastName; }
 		std::ostream& operator<<(std::ostream& out) const { return out << std::string(*this); }
+
+		json serialize() const;
 	};
 }
 

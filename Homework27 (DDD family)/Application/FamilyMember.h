@@ -4,6 +4,8 @@
 #include "Name.h"
 #include "PhoneNumber.h"
 
+using json = nlohmann::json;
+
 namespace Project {
 
 	enum class Sex {
@@ -36,14 +38,14 @@ namespace Project {
 				this->nationality = nationality;
 		}
 
-		FamilyMember(json serializedObject);
+		explicit FamilyMember(const json& serializedObject);
 
 		Name getName() const { return this->name; }
 		Date getBirthDate() const { return this->birthDate; }
 		PhoneNumber getPhoneNumber() const { return this->phoneNumber; }
 		std::string getNationality() const { return this->nationality; }
 
-		virtual json serialize();
+		virtual json serialize() const;
 	};
 }
 
