@@ -6,7 +6,7 @@
 #include "Child.h"
 
 namespace Project {
-	
+
 	class Family
 	{
 	private:
@@ -14,6 +14,8 @@ namespace Project {
 		int id;
 		static int ID_COUNTER;
 		static int MAX_CHILDREN_COUNT;
+
+		std::string familyName;
 
 		Parent father;
 		Parent mother;
@@ -23,14 +25,21 @@ namespace Project {
 
 	public:
 
-		Family(Parent father, Parent mother);
+		Family(Parent father, 
+			Parent mother, 
+			const std::string& familyName);
+		explicit Family(const json& serializedObject);
+		
+		void setFather(const Parent& father) { this->father = father; }
+		Parent getFather() const { return this->father; }
 
-		void addChild();
-		void addPet();
+		void setMother(const Parent& mother) { this->mother = mother; }
+		Parent getMother() const { return this->mother; }
 
-		void editChild();
-		void editPet();
+		void addChild(const Child& child);
+		Child getChild(size_t id) const { return this->childs[id]; }
 
+		json serialize() const;
 	};
 }
 

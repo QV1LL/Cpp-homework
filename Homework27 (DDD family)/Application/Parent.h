@@ -20,6 +20,9 @@ namespace Project {
 			const std::string& nationality = "undefined")
 			: FamilyMember(name, birthDate, phoneNumber, sex, nationality)
 		{
+			if (Project::getCurrentYear() - birthDate.getYear() < 18)
+				throw gcnew System::ArgumentException("Parent cannot be minor");
+
 			if (!job.empty())
 				this->job = job;
 		}

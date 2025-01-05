@@ -1,17 +1,25 @@
-﻿#include "MenuWindow.h"
-#include <Windows.h>
+﻿#include <Windows.h>
 #include <iostream>
+#include <vector>
+#include <thread>
 
+#include "json.hpp"
 #include "Date.h"
 #include "Name.h"
 #include "PhoneNumber.h"
 #include "Address.h"
 #include "Parent.h"
+#include "Family.h"
+
+#include "MenuWindow.h"
+#include "FamilyEditWindow.h"
+
+#define PANEL_SIZE 48
 
 using namespace Project;
 
 [STAThreadAttribute]
-int main(HINSTANCE, HINSTANCE, LPSTR, int) {
+int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Application::EnableVisualStyles();
     Application::SetCompatibleTextRenderingDefault(false);
 	MenuWindow^ menuWindow = gcnew MenuWindow();
@@ -22,9 +30,12 @@ int main(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 void Project::MenuWindow::InitializeComponent(void)
 {
+    this->families = new std::vector<Family>();
+
     this->label1 = (gcnew System::Windows::Forms::Label());
     this->addFamilyButton = (gcnew System::Windows::Forms::Button());
-    this->panel = (gcnew System::Windows::Forms::Panel());
+    this->familyPanel = (gcnew System::Windows::Forms::Panel());
+
     this->SuspendLayout();
     // 
     // label1
@@ -50,21 +61,22 @@ void Project::MenuWindow::InitializeComponent(void)
     this->addFamilyButton->TabIndex = 1;
     this->addFamilyButton->Text = L"Add";
     this->addFamilyButton->UseVisualStyleBackColor = false;
+    this->addFamilyButton->Cursor = System::Windows::Forms::Cursors::Hand;
     this->addFamilyButton->Click += gcnew System::EventHandler(this, &MenuWindow::AddFamilyButton_Click);
     // 
     // panel
     // 
-    this->panel->Location = System::Drawing::Point(18, 62);
-    this->panel->Name = L"panel";
-    this->panel->Size = System::Drawing::Size(770, 426);
-    this->panel->TabIndex = 2;
+    this->familyPanel->Location = System::Drawing::Point(18, 62);
+    this->familyPanel->Name = L"panel";
+    this->familyPanel->Size = System::Drawing::Size(770, 426);
+    this->familyPanel->TabIndex = 2;
     // 
     // MenuWindow
     // 
     this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
     this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
     this->ClientSize = System::Drawing::Size(800, 500);
-    this->Controls->Add(this->panel);
+    this->Controls->Add(this->familyPanel);
     this->Controls->Add(this->addFamilyButton);
     this->Controls->Add(this->label1);
     this->Cursor = System::Windows::Forms::Cursors::Arrow;
@@ -77,10 +89,11 @@ void Project::MenuWindow::InitializeComponent(void)
 
 }
 
-void Project::MenuWindow::AddFamily(Panel^ panel)
+void Project::MenuWindow::AddFamily(Panel^ panel, const json& serializedObject)
 {
+
     Panel^ newFamilyPanel = gcnew Panel();
-    newFamilyPanel->Location = System::Drawing::Point(0, 0 + panel->Controls->Count * 48);
+    newFamilyPanel->Location = System::Drawing::Point(0, 0 + panel->Controls->Count * PANEL_SIZE);
     newFamilyPanel->Size = System::Drawing::Size(770, 48);
     newFamilyPanel->TabIndex = 2;
 
@@ -108,6 +121,8 @@ void Project::MenuWindow::AddFamily(Panel^ panel)
     openButton->TabIndex = 1;
     openButton->Text = L"Open";
     openButton->UseVisualStyleBackColor = false;
+    openButton->Cursor = System::Windows::Forms::Cursors::Hand;
+    openButton->Click += gcnew System::EventHandler(this, &MenuWindow::OpenButtonClick);
     // 
     // Delete button
     // 
@@ -120,6 +135,7 @@ void Project::MenuWindow::AddFamily(Panel^ panel)
     deleteButton->TabIndex = 2;
     deleteButton->Text = L"Delete";
     deleteButton->UseVisualStyleBackColor = false;
+    deleteButton->Cursor = System::Windows::Forms::Cursors::Hand;
     deleteButton->Click += gcnew System::EventHandler(this, &MenuWindow::RemoveButtonClick);
 
     newFamilyPanel->Controls->Add(familyName);
@@ -127,14 +143,65 @@ void Project::MenuWindow::AddFamily(Panel^ panel)
     newFamilyPanel->Controls->Add(deleteButton);
 
     panel->Controls->Add(newFamilyPanel);
+    
+    if (serializedObject != "")
+        this->families->push_back(Family(serializedObject));
+
+    else {
+        this->families->push_back(Family(
+            Project::Parent(
+                Project::Name("Name", "Surname"),
+                Project::Date(1, 1, 1999),
+                Project::PhoneNumber(std::string("0500000000")),
+                Project::Sex::MALE
+            ),
+            Project::Parent(
+                Project::Name("Name", "Surname"),
+                Project::Date(1, 1, 1999),
+                Project::PhoneNumber(std::string("0500000000")),
+                Project::Sex::FEMALE
+            ),
+            "Family"
+        ));
+    }
 }
 
 System::Void Project::MenuWindow::AddFamilyButton_Click(System::Object^ sender, System::EventArgs^ e)
 {
-    this->AddFamily(this->panel);
+    this->AddFamily(this->familyPanel, "");
 }
 
 System::Void Project::MenuWindow::RemoveButtonClick(System::Object^ sender, System::EventArgs^ e)
 {
-    this->panel->Controls->Remove(safe_cast<Button^>(sender)->Parent);
+    Control^ layoutToDelete = safe_cast<Button^>(sender)->Parent;
+
+    int layoutToDeleteId = this->familyPanel->Controls->GetChildIndex(layoutToDelete);
+    this->familyPanel->Controls->Remove(layoutToDelete);
+    this->families->erase(this->families->begin() + layoutToDeleteId);
+
+    for (int i = layoutToDeleteId; i < this->familyPanel->Controls->Count; i++) {
+        this->familyPanel->Controls[i]->Location = Point(
+            this->familyPanel->Controls[i]->Location.X,
+            this->familyPanel->Controls[i]->Location.Y - PANEL_SIZE
+        );
+    }
+}
+
+void invokeEditWindow(Family& family)
+{
+    Application::EnableVisualStyles();
+    Application::SetCompatibleTextRenderingDefault(false);
+    FamilyEditWindow^ familyEditWindow = gcnew FamilyEditWindow(family);
+    Application::Run(familyEditWindow);
+}
+
+System::Void Project::MenuWindow::OpenButtonClick(System::Object^ sender, System::EventArgs^ e)
+{
+    Control^ targetLayout = safe_cast<Button^>(sender)->Parent;
+    int targetLayoutId = this->familyPanel->Controls->GetChildIndex(targetLayout);
+
+    Family& targetFamily = this->families->at(targetLayoutId);
+
+    std::thread familyEditWindowProcess(invokeEditWindow, std::ref(targetFamily));
+    familyEditWindowProcess.join();
 }

@@ -6,6 +6,8 @@ using json = nlohmann::json;
 
 namespace Project {
 
+	int getCurrentYear();
+
 	class Date
 	{
 	private:
@@ -21,6 +23,8 @@ namespace Project {
 		uint16_t year);
 
 		explicit Date(const json& serializedObject);
+
+		uint16_t getYear() const { return this->year; }
 
 		operator std::string() const;
 		std::ostream& operator<<(std::ostream& out) const { return out << std::string(*this); }
