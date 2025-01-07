@@ -36,9 +36,9 @@ Project::Date::Date(uint16_t day, uint16_t month, uint16_t year)
 
 Project::Date::Date(const json& serializedObject)
 {
-	this->day = serializedObject["day"];
-	this->month = serializedObject["month"];
-	this->year = serializedObject["year"];
+	day = serializedObject.at("day").get<uint16_t>();
+	month = serializedObject.at("month").get<uint16_t>();
+	year = serializedObject.at("year").get<uint16_t>();
 }
 
 Project::Date::operator std::string() const 

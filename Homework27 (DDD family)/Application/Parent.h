@@ -15,21 +15,21 @@ namespace Project {
 		Parent(const Name& name,
 			const Date& birthDate,
 			const PhoneNumber phoneNumber,
-			Sex sex,
+			Gender gender,
 			const std::string& job = "unemployed",
 			const std::string& nationality = "undefined")
-			: FamilyMember(name, birthDate, phoneNumber, sex, nationality)
+			: FamilyMember(name, birthDate, phoneNumber, gender, nationality)
 		{
-			if (Project::getCurrentYear() - birthDate.getYear() < 18)
-				throw gcnew System::ArgumentException("Parent cannot be minor");
-
 			if (!job.empty())
 				this->job = job;
 		}
 
 		explicit Parent(const json& serializedObject);
 
+		void setJob(const std::string& job);
 		std::string getJob() const { return this->job; }
+
+		void setBirthDate(const Date& birthDate) override;
 
 		json serialize() const override;
 	};

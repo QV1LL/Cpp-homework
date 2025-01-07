@@ -6,17 +6,24 @@
 #include "json.hpp"
 #include "Date.h"
 #include "Name.h"
+#include "json.hpp"
+#include "Date.h"
+#include "Name.h"
 #include "PhoneNumber.h"
 #include "Address.h"
 #include "Parent.h"
 #include "Family.h"
+#include "Child.h"
+#include "Pet.h"
 
 #include "MenuWindow.h"
 #include "FamilyEditWindow.h"
 
-#define PANEL_SIZE 48
+#define FAMILY_PANEL_SIZE 48
 
 using namespace Project;
+
+void fixLayoutAfterDelete(Panel^ panel, int panelSize, int deleteId);
 
 [STAThreadAttribute]
 int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -93,8 +100,8 @@ void Project::MenuWindow::AddFamily(Panel^ panel, const json& serializedObject)
 {
 
     Panel^ newFamilyPanel = gcnew Panel();
-    newFamilyPanel->Location = System::Drawing::Point(0, 0 + panel->Controls->Count * PANEL_SIZE);
-    newFamilyPanel->Size = System::Drawing::Size(770, 48);
+    newFamilyPanel->Location = System::Drawing::Point(0, 0 + panel->Controls->Count * FAMILY_PANEL_SIZE);
+    newFamilyPanel->Size = System::Drawing::Size(770, FAMILY_PANEL_SIZE);
     newFamilyPanel->TabIndex = 2;
 
     // 
@@ -122,7 +129,7 @@ void Project::MenuWindow::AddFamily(Panel^ panel, const json& serializedObject)
     openButton->Text = L"Open";
     openButton->UseVisualStyleBackColor = false;
     openButton->Cursor = System::Windows::Forms::Cursors::Hand;
-    openButton->Click += gcnew System::EventHandler(this, &MenuWindow::OpenButtonClick);
+    openButton->Click += gcnew System::EventHandler(this, &MenuWindow::EditButtonClick);
     // 
     // Delete button
     // 
@@ -152,14 +159,14 @@ void Project::MenuWindow::AddFamily(Panel^ panel, const json& serializedObject)
             Project::Parent(
                 Project::Name("Name", "Surname"),
                 Project::Date(1, 1, 1999),
-                Project::PhoneNumber(std::string("0500000000")),
-                Project::Sex::MALE
+                Project::PhoneNumber(std::string("missing")),
+                Project::Gender::MALE
             ),
             Project::Parent(
                 Project::Name("Name", "Surname"),
                 Project::Date(1, 1, 1999),
-                Project::PhoneNumber(std::string("0500000000")),
-                Project::Sex::FEMALE
+                Project::PhoneNumber(std::string("missing")),
+                Project::Gender::FEMALE
             ),
             "Family"
         ));
@@ -179,12 +186,7 @@ System::Void Project::MenuWindow::RemoveButtonClick(System::Object^ sender, Syst
     this->familyPanel->Controls->Remove(layoutToDelete);
     this->families->erase(this->families->begin() + layoutToDeleteId);
 
-    for (int i = layoutToDeleteId; i < this->familyPanel->Controls->Count; i++) {
-        this->familyPanel->Controls[i]->Location = Point(
-            this->familyPanel->Controls[i]->Location.X,
-            this->familyPanel->Controls[i]->Location.Y - PANEL_SIZE
-        );
-    }
+    fixLayoutAfterDelete(familyPanel, FAMILY_PANEL_SIZE, layoutToDeleteId);
 }
 
 void invokeEditWindow(Family& family)
@@ -195,7 +197,7 @@ void invokeEditWindow(Family& family)
     Application::Run(familyEditWindow);
 }
 
-System::Void Project::MenuWindow::OpenButtonClick(System::Object^ sender, System::EventArgs^ e)
+System::Void Project::MenuWindow::EditButtonClick(System::Object^ sender, System::EventArgs^ e)
 {
     Control^ targetLayout = safe_cast<Button^>(sender)->Parent;
     int targetLayoutId = this->familyPanel->Controls->GetChildIndex(targetLayout);
@@ -204,4 +206,8 @@ System::Void Project::MenuWindow::OpenButtonClick(System::Object^ sender, System
 
     std::thread familyEditWindowProcess(invokeEditWindow, std::ref(targetFamily));
     familyEditWindowProcess.join();
+
+    Label^ labelToUpdate = safe_cast<Label^>(targetLayout->Controls["familyName"]);
+    labelToUpdate->Text = 
+        gcnew String(std::string(this->families->at(targetLayoutId).getName()).c_str());
 }

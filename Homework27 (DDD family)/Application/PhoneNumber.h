@@ -17,7 +17,9 @@ namespace Project {
 	public:
 
 		PhoneNumber(const std::string& phoneNumber) {
-			if (phoneNumber.length() != 10 || !std::all_of(phoneNumber.begin(), phoneNumber.end(), [] (unsigned char symbol) { return std::isdigit(symbol); }))
+			if ((phoneNumber.length() != 10 || 
+				!std::all_of(phoneNumber.begin(), phoneNumber.end(), [](unsigned char symbol) { return std::isdigit(symbol); })) &&
+				phoneNumber != "missing")
 				throw gcnew System::ArgumentException("Phone number must be string that containts 10 digits!");
 
 			this->phoneNumber = phoneNumber;

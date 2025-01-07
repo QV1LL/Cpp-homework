@@ -26,6 +26,9 @@ namespace Project {
 
 		explicit Name(const json& serializedObject);
 
+		std::string getFirstName() const { return this->firstName; }
+		std::string getLastName() const { return this->lastName; }
+
 		operator std::string() const { return this->firstName + " " + this->lastName; }
 		std::ostream& operator<<(std::ostream& out) const { return out << std::string(*this); }
 

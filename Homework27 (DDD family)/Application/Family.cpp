@@ -6,16 +6,14 @@
 #include "Parent.h"
 
 int Project::Family::ID_COUNTER = 0;
-int Project::Family::MAX_CHILDREN_COUNT = 5;
+int Project::Family::MAX_CHILDREN_COUNT = 4;
 
 Project::Family::Family(Parent father, 
 	Parent mother, 
 	const std::string& familyName)
 	: father(father), mother(mother)
 {
-	if (familyName.empty())
-		throw gcnew System::ArgumentNullException("Family name cannot be empty");
-
+	this->setName(familyName);
 	this->id = Family::ID_COUNTER++;
 }
 
@@ -44,13 +42,48 @@ Project::Family::Family(const json& serializedObject)
 	this->id = Family::ID_COUNTER++;
 }
 
+void Project::Family::setName(const std::string& name)
+{
+	if (name.empty())
+		throw gcnew System::ArgumentNullException("Family name cannot be empty");
+
+	this->familyName = name;
+}
+
 void Project::Family::addChild(const Child& child)
 {
-	if (std::min(this->father.getBirthDate().getYear(), 
-		this->mother.getBirthDate().getYear()) - child.getBirthDate().getYear() - 18 < 0)
+	if (child.getBirthDate().getYear() - 
+		std::max(this->father.getBirthDate().getYear(),
+		this->mother.getBirthDate().getYear()) - 18 < 0)
 		throw gcnew System::ArgumentException("Child age is incorrect!");
 
 	this->childs.push_back(child);
+}
+
+void Project::Family::setChild(const Child& child, int id)
+{
+	if (child.getBirthDate().getYear() -
+		std::max(this->father.getBirthDate().getYear(),
+			this->mother.getBirthDate().getYear()) - 18 < 0)
+		throw gcnew System::ArgumentException("Child age is incorrect!");
+
+	this->childs[id] = child;
+}
+
+void Project::Family::deleteChild(int id)
+{
+	if (id < 0 || id >= this->childs.size())
+		throw gcnew System::IndexOutOfRangeException("Index was out of range");
+
+	this->childs.erase(this->childs.begin() + id);
+}
+
+void Project::Family::deletePet(int id)
+{
+	if (id < 0 || id >= this->pets.size())
+		throw gcnew System::IndexOutOfRangeException("Index was out of range");
+
+	this->pets.erase(this->pets.begin() + id);
 }
 
 json Project::Family::serialize() const

@@ -24,6 +24,8 @@ namespace Project {
 
 		explicit Date(const json& serializedObject);
 
+		uint16_t getDay() const { return this->day; }
+		uint16_t getMonth() const { return this->month; }
 		uint16_t getYear() const { return this->year; }
 
 		operator std::string() const;

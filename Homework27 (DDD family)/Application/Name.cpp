@@ -7,8 +7,8 @@ using json = nlohmann::json;
 
 Project::Name::Name(const json& serializedObject)
 {
-	this->firstName = serializedObject["first_name"];
-	this->lastName = serializedObject["last_name"];
+	this->firstName = serializedObject.at("first_name").get<std::string>();
+	this->lastName = serializedObject.at("last_name").get<std::string>();
 }
 
 json Project::Name::serialize() const

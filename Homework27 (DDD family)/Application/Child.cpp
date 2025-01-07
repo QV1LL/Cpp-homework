@@ -8,6 +8,14 @@ Project::Child::Child(const json& serializedObject)
     this->educationPlace = serializedObject["education_place"];
 }
 
+void Project::Child::setEducationPlace(const std::string& educationPlace)
+{
+    if (educationPlace.empty())
+        throw gcnew System::ArgumentNullException("Education place cannot be null string");
+
+    this->educationPlace = educationPlace;
+}
+
 json Project::Child::serialize() const
 {
     json result = FamilyMember::serialize();

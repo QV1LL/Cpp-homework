@@ -38,14 +38,16 @@ namespace Project {
 		void AddFamily(Panel^ panel, const json& serializedObject);
 #pragma endregion
 
-	private: System::Void MenuWindow_Load(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void MenuWindow_Load(System::Object^ sender, System::EventArgs^ e) 
+	{
+
 	}
 
 	private: System::Void AddFamilyButton_Click(System::Object^ sender, System::EventArgs^ e);
 
 	private: System::Void RemoveButtonClick(System::Object^ sender, System::EventArgs^ e);
 
-	private: System::Void OpenButtonClick(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void EditButtonClick(System::Object^ sender, System::EventArgs^ e);
 
 	};
 }

@@ -11,8 +11,31 @@ Project::FamilyMember::FamilyMember(const json& serializedObject)
 	birthDate(serializedObject["birth_date"]),
 	phoneNumber(serializedObject["phone_number"])
 {
-	this->sex = Project::Sex(serializedObject["sex"]);
+	this->gender = Project::Gender(serializedObject["sex"]);
 	this->nationality = serializedObject["nationality"];
+}
+
+void Project::FamilyMember::setName(const Name& name)
+{
+	this->name = name;
+}
+
+void Project::FamilyMember::setBirthDate(const Date& birthDate)
+{
+	this->birthDate = birthDate;
+}
+
+void Project::FamilyMember::setPhoneNumber(const PhoneNumber& phoneNumber)
+{
+	this->phoneNumber = phoneNumber;
+}
+
+void Project::FamilyMember::setNationality(const std::string& nationality)
+{
+	if (nationality.empty())
+		throw gcnew System::ArgumentNullException("Nationality cannot be null string");
+
+	this->nationality = nationality;
 }
 
 json Project::FamilyMember::serialize() const
@@ -21,7 +44,7 @@ json Project::FamilyMember::serialize() const
 		{"name", this->name.serialize()},
 		{"nationality", this->nationality},
 		{"phone_number", this->phoneNumber.serialize()},
-		{"sex", this->sex},
+		{"sex", this->gender},
 		{"birth_date", this->birthDate.serialize()},
 	};
 }

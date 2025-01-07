@@ -8,10 +8,10 @@ using json = nlohmann::json;
 
 Project::Address::Address(const json& serializedObject)
 {
-	this->town = serializedObject["town"];
-	this->street = serializedObject["street"];
-	this->buildingNumber = serializedObject["building_number"];
-	this->flatNumber = serializedObject["flat_number"];
+	this->town = serializedObject.at("town").get<std::string>();
+	this->street = serializedObject.at("street").get<uint16_t>();
+	this->buildingNumber = serializedObject.at("building_number").get<uint16_t>();
+	this->flatNumber = serializedObject.at("flat_number").get<uint16_t>();
 }
 
 Project::Address::operator std::string() const
@@ -33,7 +33,7 @@ json Project::Address::serialize() const
 	return {
 		{"town", this->town},
 		{"street", this->street},
-		{"building_number", this->buildingNumber},
-		{"flat_number", this->flatNumber},
+		{"building_number", std::to_string(this->buildingNumber)},
+		{"flat_number", std::to_string(this->flatNumber)},
 	};
 }

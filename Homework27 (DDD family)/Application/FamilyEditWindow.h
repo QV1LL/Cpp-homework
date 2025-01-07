@@ -15,6 +15,7 @@ namespace Project {
 		FamilyEditWindow(Family& family) : family(family)
 		{
 			InitializeComponent();
+			LoadFamilyMemberUI();
 		}
 
 	protected:
@@ -34,8 +35,12 @@ namespace Project {
 		System::Windows::Forms::Label^ motherLabel;
 		System::Windows::Forms::Button^ editFatherButton;
 		System::Windows::Forms::Button^ editMotherButton;
-	private: System::Windows::Forms::Label^ childrenLabel;
-	private: System::Windows::Forms::Label^ petsLabel;
+		System::Windows::Forms::Label^ childrenLabel;
+		System::Windows::Forms::Label^ petsLabel;
+		System::Windows::Forms::Panel^ childrenPanel;
+		System::Windows::Forms::Panel^ petsPanel;
+		System::Windows::Forms::Button^ addChildButton;
+		System::Windows::Forms::Button^ addPetButton;
 
 		Family& family;
 
@@ -43,6 +48,24 @@ namespace Project {
 
 		void InitializeComponent(void);
 
+		void LoadFamilyMemberUI();
+
+		void AddChild(const json& serializedObject);
+
+		void AddPet(const json& serializedObject);
+
 #pragma endregion
+	private: System::Void addChildButtonClick(System::Object^ sender, System::EventArgs^ e);
+
+	private: System::Void addPetButtonClick(System::Object^ sender, System::EventArgs^ e);
+
+	private: System::Void removeChildButtonClick(System::Object^ sender, System::EventArgs^ e);
+
+	private: System::Void removePetButtonClick(System::Object^ sender, System::EventArgs^ e);
+
+	private: System::Void onFamilyMemberEditButtonClick(System::Object^ sender, System::EventArgs^ e);
+
+	private: System::Void onFamilyNameTextChanged(System::Object^ sender, System::EventArgs^ e);
+
 	};
 }
