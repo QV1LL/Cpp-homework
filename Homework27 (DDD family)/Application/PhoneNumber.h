@@ -27,7 +27,7 @@ namespace Project {
 
 		explicit PhoneNumber(const json& serializedObject);
 
-		operator std::string() const { return "+38" + this->phoneNumber; }
+		operator std::string() const { return (this->phoneNumber == "missing") ? this->phoneNumber : "+38" + this->phoneNumber; }
 		std::ostream& operator<<(std::ostream& out) const { return out << std::string(*this); }
 
 		json serialize() const;

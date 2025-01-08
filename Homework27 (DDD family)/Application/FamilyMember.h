@@ -8,10 +8,15 @@ using json = nlohmann::json;
 
 namespace Project {
 
+	const std::string stringGenders[2] =
+	{
+		"Male",
+		"Female",
+	};
+
 	enum class Gender {
 		MALE,
 		FEMALE,
-		PANZERKAUMPFWAGEN,
 	};
 
 	class FamilyMember
@@ -47,6 +52,9 @@ namespace Project {
 
 		void setPhoneNumber(const PhoneNumber& phoneNumber);
 		PhoneNumber getPhoneNumber() const { return this->phoneNumber; }
+
+		void setGender(const Gender& gender) { this->gender = gender; }
+		Gender getGender() const { return this->gender; }
 
 		void setNationality(const std::string& nationality);
 		std::string getNationality() const { return this->nationality; }

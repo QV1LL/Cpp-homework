@@ -186,6 +186,7 @@ void Project::FamilyEditWindow::InitializeComponent(void)
     // FamilyEditWindow
     // 
     this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+    this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::Fixed3D;
     this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
     this->ClientSize = System::Drawing::Size(821, 588);
     this->Controls->Add(this->addPetButton);
@@ -240,7 +241,7 @@ void Project::FamilyEditWindow::AddChild(const json& serializedObject)
             Project::Name("Name", "Surname"),
             Project::Date(1, 1, 2018),
             Project::PhoneNumber(std::string("missing")),
-            Project::Gender::PANZERKAUMPFWAGEN,
+            Project::Gender::MALE,
     };
 
     if (serializedObject == "")
@@ -424,34 +425,50 @@ System::Void Project::FamilyEditWindow::onFamilyNameTextChanged(System::Object^ 
     }
 }
 
-void invokeFamilyMemberEditWindow(Family& family, FamilyMember* familyMember)
+void invokeFamilyMemberEditWindow(FamilyMember& familyMember)
 {
     Application::EnableVisualStyles();
     Application::SetCompatibleTextRenderingDefault(false);
-    FamilyMemberEditWindow^ familyEditWindow = gcnew FamilyMemberEditWindow(family, *familyMember);
+    FamilyMemberEditWindow^ familyEditWindow = gcnew FamilyMemberEditWindow(familyMember);
     Application::Run(familyEditWindow);
 }
 
 System::Void Project::FamilyEditWindow::onFamilyMemberEditButtonClick(System::Object^ sender, System::EventArgs^ e)
 {
     Control^ targetLayout = safe_cast<Button^>(sender)->Parent;
-    FamilyMember* pTargetFamilyMember = nullptr;
 
     if (safe_cast<Button^>(sender)->Name == "editFatherButton")
-        pTargetFamilyMember = &(this->family.getFather());
-    else if (safe_cast<Button^>(sender)->Name == "editMotherButton")
-        pTargetFamilyMember = &(this->family.getMother());
-
-    if (pTargetFamilyMember == nullptr)
     {
-        int targetChildId = this->childrenPanel->Controls->GetChildIndex(targetLayout);
-        pTargetFamilyMember = &this->family.getChild(targetChildId);
+        Project::Parent targetFamilyMember = this->family.getFather();
+        
+        std::thread familyEditWindowProcess(invokeFamilyMemberEditWindow, std::ref(targetFamilyMember));
+        familyEditWindowProcess.join();
+        this->family.setFather(targetFamilyMember);
+
+        return;
+
+    }
+    else if (safe_cast<Button^>(sender)->Name == "editMotherButton")
+    {
+        Project::Parent targetFamilyMember = this->family.getMother();
+
+        std::thread familyEditWindowProcess(invokeFamilyMemberEditWindow, std::ref(targetFamilyMember));
+        familyEditWindowProcess.join();
+        this->family.setMother(targetFamilyMember);
+
+        return;
     }
 
-    std::thread familyEditWindowProcess(invokeFamilyMemberEditWindow, std::ref(this->family), pTargetFamilyMember);
-    familyEditWindowProcess.join();
+    int targetChildId = this->childrenPanel->Controls->GetChildIndex(targetLayout);
+    Child targetFamilyMember = this->family.getChild(targetChildId);
 
-//    Label^ labelToUpdate = safe_cast<Label^>(targetLayout->Controls["familyName"]);
-//    labelToUpdate->Text =
-//        gcnew String(std::string(this->families->at(targetChildId).getName()).c_str());
+    std::thread familyEditWindowProcess(invokeFamilyMemberEditWindow, std::ref(targetFamilyMember));
+    familyEditWindowProcess.join();
+    this->family.setChild(targetFamilyMember, targetChildId);
+
+    Control^ labelToUpdate =
+        this->childrenPanel->Controls[targetChildId]->Controls->Find("childName", false)[0];
+
+    labelToUpdate->Text =
+        gcnew String(std::string(this->family.getChild(targetChildId).getName()).c_str());
 }

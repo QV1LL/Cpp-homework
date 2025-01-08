@@ -5,6 +5,7 @@ namespace Project {
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
+	using namespace System::Collections::Generic;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
@@ -12,8 +13,8 @@ namespace Project {
 	public ref class FamilyMemberEditWindow : public System::Windows::Forms::Form
 	{
 	public:
-		FamilyMemberEditWindow(Family& family, FamilyMember familyMember)
-			: family(family), familyMember(&familyMember)
+		FamilyMemberEditWindow(FamilyMember& familyMember)
+			: familyMember(&familyMember)
 		{
 			InitializeComponent();
 		}
@@ -27,6 +28,7 @@ namespace Project {
 			}
 		}
 	private: 
+
 		System::Windows::Forms::TextBox^ nameTextBox;
 		System::Windows::Forms::TextBox^ surnameTextBox;
 
@@ -46,7 +48,6 @@ namespace Project {
 	 
 		System::ComponentModel::Container ^components;
 
-		Family& family;
 		FamilyMember* familyMember;
 
 #pragma region Windows Form Designer generated code
@@ -54,7 +55,9 @@ namespace Project {
 		void InitializeComponent(void);
 
 #pragma endregion
-	private: System::Void name_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-	}
+
+	private:
+		System::Void onTextChanged(System::Object^ sender, System::EventArgs^ e);
+
 	};
 }

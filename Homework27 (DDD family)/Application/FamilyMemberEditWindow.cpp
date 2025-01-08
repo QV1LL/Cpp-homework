@@ -1,5 +1,6 @@
 ﻿#include <Windows.h>
 #include <iostream>
+#include <msclr\marshal_cppstd.h>
 
 #include "json.hpp"
 #include "Date.h"
@@ -45,7 +46,8 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->nameTextBox->TabIndex = 0;
     this->nameTextBox->Text = 
         gcnew System::String(std::string(this->familyMember->getName().getFirstName()).c_str());
-    this->nameTextBox->TextChanged += gcnew System::EventHandler(this, &FamilyMemberEditWindow::name_TextChanged);
+    this->nameTextBox->TextChanged += 
+        gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
     // day
     // 
@@ -55,8 +57,12 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->day->Name = L"day";
     this->day->Size = System::Drawing::Size(95, 26);
     this->day->TabIndex = 1;
+    this->day->Minimum = 1;
+    this->day->Maximum = 31;
     this->day->Text =
         gcnew System::String(std::to_string(this->familyMember->getBirthDate().getDay()).c_str());
+    this->day->TextChanged +=
+        gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
     // birthDateLabel
     // 
@@ -77,8 +83,12 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->month->Name = L"month";
     this->month->Size = System::Drawing::Size(95, 26);
     this->month->TabIndex = 3;
+    this->month->Minimum = 1;
+    this->month->Maximum = 12;
     this->month->Text = 
         gcnew System::String(std::to_string(this->familyMember->getBirthDate().getMonth()).c_str());
+    this->month->TextChanged += 
+        gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
     // year
     // 
@@ -88,8 +98,12 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->year->Name = L"year";
     this->year->Size = System::Drawing::Size(95, 26);
     this->year->TabIndex = 4;
+    this->year->Minimum = 1900;
+    this->year->Maximum = Project::getCurrentYear();
     this->year->Text = 
         gcnew System::String(std::to_string(this->familyMember->getBirthDate().getYear()).c_str());
+    this->year->TextChanged +=
+        gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
     // phoneNumberTextBox
     // 
@@ -101,6 +115,8 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->phoneNumberTextBox->TabIndex = 5;
     this->phoneNumberTextBox->Text =
         gcnew System::String(std::string(this->familyMember->getPhoneNumber()).c_str());
+    this->phoneNumberTextBox->TextChanged +=
+        gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
     // phoneNumberLabel
     // 
@@ -132,6 +148,10 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->genderTextBox->Name = L"genderTextBox";
     this->genderTextBox->Size = System::Drawing::Size(342, 26);
     this->genderTextBox->TabIndex = 8;
+    this->genderTextBox->Text = 
+        gcnew System::String(Project::stringGenders[int(this->familyMember->getGender())].c_str());
+    this->genderTextBox->TextChanged +=
+        gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
     // nationalityLabel
     // 
@@ -154,6 +174,8 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->nationalityTextBox->TabIndex = 10;
     this->nationalityTextBox->Text =
         gcnew System::String(std::string(this->familyMember->getNationality()).c_str());
+    this->nationalityTextBox->TextChanged +=
+        gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
     // surnameTextBox
     // 
@@ -165,11 +187,14 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->surnameTextBox->Size = System::Drawing::Size(164, 31);
     this->surnameTextBox->TabIndex = 11;
     this->surnameTextBox->Text = 
-        gcnew System::String(std::string(this->familyMember->getName().getLastName()).c_str());;
+        gcnew System::String(std::string(this->familyMember->getName().getLastName()).c_str());
+    this->surnameTextBox->TextChanged += 
+        gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
     // FamilyMemberEditWindow
     // 
     this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+    this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::Fixed3D;
     this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
     this->ClientSize = System::Drawing::Size(361, 494);
     this->Controls->Add(this->surnameTextBox);
@@ -191,5 +216,63 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->year))->EndInit();
     this->ResumeLayout(false);
     this->PerformLayout();
+}
 
+System::Void Project::FamilyMemberEditWindow::onTextChanged(System::Object^ sender, System::EventArgs^ e)
+{
+    Control^ control = safe_cast<Control^>(sender);
+    msclr::interop::marshal_context context;
+
+    try
+    {
+        if (control == this->nameTextBox)
+            this->familyMember->setName({ context.marshal_as<std::string>(control->Text),
+                this->familyMember->getName().getLastName() });
+
+        else if (control == this->surnameTextBox)
+            this->familyMember->setName({ this->familyMember->getName().getFirstName(),
+                context.marshal_as<std::string>(control->Text) });
+
+        else if (control == this->day)
+            this->familyMember->setBirthDate(Date{
+                uint16_t(std::stoi(context.marshal_as<std::string>(control->Text))),
+                this->familyMember->getBirthDate().getMonth(),
+                this->familyMember->getBirthDate().getYear()
+                });
+
+        else if (control == this->month)
+            this->familyMember->setBirthDate(Date{
+                this->familyMember->getBirthDate().getDay(),
+                uint16_t(std::stoi(context.marshal_as<std::string>(control->Text))),
+                this->familyMember->getBirthDate().getYear()
+                });
+
+        else if (control == this->year)
+            this->familyMember->setBirthDate(Date{
+                this->familyMember->getBirthDate().getDay(),
+                this->familyMember->getBirthDate().getMonth(),
+                uint16_t(std::stoi(context.marshal_as<std::string>(control->Text)))
+                });
+
+        else if (control == this->phoneNumberTextBox)
+            this->familyMember->setPhoneNumber({
+            context.marshal_as<std::string>(control->Text)
+                });
+
+        else if (control == this->genderTextBox)
+        {
+            for (int i = 0; i < 2; i++)
+                if (stringGenders[i] == context.marshal_as<std::string>(control->Text))
+                    this->familyMember->setGender(Project::Gender(i));
+        }
+
+        else if (control == this->nationalityTextBox)
+            this->familyMember->setNationality(
+                context.marshal_as<std::string>(control->Text)
+            );
+    }
+    catch (System::Exception^ e)
+    {
+
+    }
 }

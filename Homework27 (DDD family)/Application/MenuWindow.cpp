@@ -81,6 +81,7 @@ void Project::MenuWindow::InitializeComponent(void)
     // MenuWindow
     // 
     this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+    this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::Fixed3D;
     this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
     this->ClientSize = System::Drawing::Size(800, 500);
     this->Controls->Add(this->familyPanel);
