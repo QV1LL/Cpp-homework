@@ -30,12 +30,14 @@ std::vector<json> DataLoader::load()
 	std::vector<json> result;
 
 	for (const auto& entry : std::filesystem::directory_iterator(this->folderPath)) {
-		std::ifstream fileStream(this->folderPath + "/" + entry.path().filename().string());
-		std::cout << this->folderPath + "/" + entry.path().filename().string();
-		std::string serializedObjectString;
-		fileStream >> serializedObjectString;
-		
-		json serializedObject(serializedObjectString);
+		std::ifstream fileStream("./" + this->folderPath + "/" + entry.path().filename().string());
+
+		if (!fileStream.is_open())
+			continue;
+
+		json serializedObject;
+		fileStream >> serializedObject;
+	
 		result.push_back(serializedObject);
 	}
 

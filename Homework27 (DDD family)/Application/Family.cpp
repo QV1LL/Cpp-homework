@@ -23,21 +23,11 @@ Project::Family::Family(const json& serializedObject)
 	familyName(serializedObject["family_name"])
 
 {
-	int i = 0;
-	while (true) {
-		if (serializedObject["children"]["child" + std::to_string(i)] == "")
-			break;
+	for (auto [key, value] : serializedObject["children"].items())
+		this->childs.push_back(Child(value));
 
-		this->childs.push_back(Child(serializedObject["children"]["child" + std::to_string(i++)]));
-	}
-
-	i = 0;
-	while (true) {
-		if (serializedObject["pets"]["pet" + std::to_string(i)] == "")
-			break;
-
-		this->pets.push_back(Pet(serializedObject["pets"]["pet" + std::to_string(i++)]));
-	}
+	for (auto [key, value] : serializedObject["pets"].items())
+		this->pets.push_back(Pet(value));
 
 	this->id = Family::ID_COUNTER++;
 }

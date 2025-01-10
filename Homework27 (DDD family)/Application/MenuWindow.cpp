@@ -165,9 +165,13 @@ void Project::MenuWindow::AddFamily(Panel^ panel, const json& serializedObject)
     newFamilyPanel->Controls->Add(deleteButton);
 
     panel->Controls->Add(newFamilyPanel);
-    
+
     if (!serializedObject.empty())
+    {
         this->families->push_back(Family(serializedObject));
+        familyName->Text = 
+            gcnew System::String(serializedObject.at("family_name").get<std::string>().c_str());
+    }
 
     else {
         this->families->push_back(Family(
@@ -190,7 +194,7 @@ void Project::MenuWindow::AddFamily(Panel^ panel, const json& serializedObject)
 
 System::Void Project::MenuWindow::AddFamilyButton_Click(System::Object^ sender, System::EventArgs^ e)
 {
-    this->AddFamily(this->familyPanel, "");
+    this->AddFamily(this->familyPanel, json());
 }
 
 System::Void Project::MenuWindow::RemoveButtonClick(System::Object^ sender, System::EventArgs^ e)
