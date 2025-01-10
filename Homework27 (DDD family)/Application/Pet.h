@@ -5,6 +5,14 @@
 
 namespace Project {
 	
+	const std::string stringPetTypes[4] =
+	{
+		"Dog",
+		"Cat",
+		"Parrot",
+		"Hamster",
+	};
+
 	enum class PetType {
 		DOG,
 		CAT,

@@ -15,6 +15,8 @@
 #include "Family.h"
 #include "Child.h"
 #include "Pet.h"
+#include "DataLoader.h"
+#include "DataSaver.h"
 
 #include "MenuWindow.h"
 #include "FamilyEditWindow.h"
@@ -26,7 +28,7 @@ using namespace Project;
 void fixLayoutAfterDelete(Panel^ panel, int panelSize, int deleteId);
 
 [STAThreadAttribute]
-int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+int main(HINSTANCE, HINSTANCE, LPSTR, int) {
     Application::EnableVisualStyles();
     Application::SetCompatibleTextRenderingDefault(false);
 	MenuWindow^ menuWindow = gcnew MenuWindow();
@@ -38,6 +40,7 @@ int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 void Project::MenuWindow::InitializeComponent(void)
 {
     this->families = new std::vector<Family>();
+    this->saveFolder = new std::string("savings");
 
     this->label1 = (gcnew System::Windows::Forms::Label());
     this->addFamilyButton = (gcnew System::Windows::Forms::Button());
@@ -95,6 +98,17 @@ void Project::MenuWindow::InitializeComponent(void)
     this->ResumeLayout(false);
     this->PerformLayout();
 
+    try
+    {
+        std::vector<json> serializedObjects = DataLoader::getInstance(*this->saveFolder)->load();
+
+        for (const json& serializedObject : serializedObjects)
+            AddFamily(this->familyPanel, serializedObject);
+    }
+    catch (std::invalid_argument e)
+    {
+
+    }
 }
 
 void Project::MenuWindow::AddFamily(Panel^ panel, const json& serializedObject)
@@ -152,7 +166,7 @@ void Project::MenuWindow::AddFamily(Panel^ panel, const json& serializedObject)
 
     panel->Controls->Add(newFamilyPanel);
     
-    if (serializedObject != "")
+    if (!serializedObject.empty())
         this->families->push_back(Family(serializedObject));
 
     else {

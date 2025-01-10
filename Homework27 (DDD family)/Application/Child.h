@@ -28,7 +28,7 @@ namespace Project {
 		void setEducationPlace(const std::string& educationPlace);
 		std::string getEducationPlaceTitle() const { return this->educationPlace; }
 
-		json serialize() const override;
+		virtual json serialize() const override;
 	};
 }
 

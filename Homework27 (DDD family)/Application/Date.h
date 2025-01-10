@@ -1,6 +1,7 @@
 #pragma once
 
 #include "json.hpp"
+#include "Serializable.h"
 
 using json = nlohmann::json;
 
@@ -8,7 +9,7 @@ namespace Project {
 
 	int getCurrentYear();
 
-	class Date
+	class Date : public Serializable
 	{
 	private:
 
@@ -31,7 +32,7 @@ namespace Project {
 		operator std::string() const;
 		std::ostream& operator<<(std::ostream& out) const { return out << std::string(*this); }
 
-		json serialize() const;
+		virtual json serialize() const;
 	};
 }
 

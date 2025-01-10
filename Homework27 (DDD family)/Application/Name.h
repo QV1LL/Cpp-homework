@@ -1,12 +1,13 @@
 #pragma once
 
 #include "json.hpp"
+#include "Serializable.h"
 
 using json = nlohmann::json;
 
 namespace Project {
 
-	class Name
+	class Name : public Serializable
 	{
 	private:
 
@@ -32,7 +33,7 @@ namespace Project {
 		operator std::string() const { return this->firstName + " " + this->lastName; }
 		std::ostream& operator<<(std::ostream& out) const { return out << std::string(*this); }
 
-		json serialize() const;
+		virtual json serialize() const;
 	};
 }
 

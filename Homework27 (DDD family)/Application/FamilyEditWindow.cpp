@@ -17,6 +17,7 @@
 
 #include "FamilyEditWindow.h"
 #include "FamilyMemberEditWindow.h"
+#include "PetEditWindow.h"
 
 #define PANEL_SIZE 76
 
@@ -209,28 +210,13 @@ void Project::FamilyEditWindow::InitializeComponent(void)
 
 void Project::FamilyEditWindow::LoadFamilyMemberUI()
 {
-    int i = 0;
     json serializedChildren = this->family.serialize()["children"];
+    for (auto [key, value] : serializedChildren.items())
+        AddChild(value);
 
-    while (true) {
-        json serializedChild = serializedChildren["child" + std::to_string(i)];
-        if (serializedChild.is_null())
-            break;
-
-        AddChild(serializedChild);
-        i++;
-    }
-
-    i = 0;
     json serializedPets = this->family.serialize()["pets"];
-    while (true) {
-        json serializedPet = serializedPets["pet" + std::to_string(i)];
-        if (serializedPet.is_null())
-            break;
-
-        AddPet(serializedPet);
-        i++;
-    }
+    for (auto [key, value] : serializedPets.items())
+        AddPet(value);
 }
 
 void Project::FamilyEditWindow::AddChild(const json& serializedObject)
@@ -320,49 +306,50 @@ void Project::FamilyEditWindow::AddPet(const json& serializedObject)
     if (serializedObject == "")
         this->family.addPet(newPet);
     // 
-    // childPanel
+    // pet
     // 
     Panel^ petPanel = gcnew Panel();
     petPanel->Location = System::Drawing::Point(3,
         0 + this->petsPanel->Controls->Count * PANEL_SIZE);
-    petPanel->Name = L"childPanel";
+    petPanel->Name = L"petPanel";
     petPanel->Size = System::Drawing::Size(331, 76);
     petPanel->TabIndex = 0;
     // 
-    // childName
+    // petName
     // 
     Label^ petName = gcnew Label();
     petName->AutoSize = true;
     petName->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
         static_cast<System::Byte>(0)));
     petName->Location = System::Drawing::Point(118, 10);
-    petName->Name = L"childName";
+    petName->Name = L"petName";
     petName->Size = System::Drawing::Size(83, 16);
     petName->TabIndex = 0;
     petName->Text =
         gcnew System::String(std::string(newPet.getName()).c_str());
     // 
-    // childEditButton
+    // petEditButton
     // 
     Button^ petEditButton = gcnew Button();
     petEditButton->BackColor = System::Drawing::SystemColors::ControlLight;
     petEditButton->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
         static_cast<System::Byte>(0)));
     petEditButton->Location = System::Drawing::Point(18, 45);
-    petEditButton->Name = L"childEditButton";
+    petEditButton->Name = L"petEditButton";
     petEditButton->Size = System::Drawing::Size(123, 28);
     petEditButton->TabIndex = 1;
     petEditButton->Text = L"Edit";
     petEditButton->UseVisualStyleBackColor = false;
+    petEditButton->Click += gcnew System::EventHandler(this, &FamilyEditWindow::onPetEditButtonClick);
     // 
-    // childRemoveButton
+    // petRemoveButton
     // 
     Button^ petRemoveButton = gcnew Button();
     petRemoveButton->BackColor = System::Drawing::SystemColors::ControlLight;
     petRemoveButton->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
         static_cast<System::Byte>(0)));
     petRemoveButton->Location = System::Drawing::Point(187, 45);
-    petRemoveButton->Name = L"childRemoveButton";
+    petRemoveButton->Name = L"petRemoveButton";
     petRemoveButton->Size = System::Drawing::Size(123, 28);
     petRemoveButton->TabIndex = 2;
     petRemoveButton->Text = L"Remove";
@@ -433,6 +420,14 @@ void invokeFamilyMemberEditWindow(FamilyMember& familyMember)
     Application::Run(familyEditWindow);
 }
 
+void invokePetEditWindow(Pet& familyMember)
+{
+    Application::EnableVisualStyles();
+    Application::SetCompatibleTextRenderingDefault(false);
+    PetEditWindow^ familyEditWindow = gcnew PetEditWindow(familyMember);
+    Application::Run(familyEditWindow);
+}
+
 System::Void Project::FamilyEditWindow::onFamilyMemberEditButtonClick(System::Object^ sender, System::EventArgs^ e)
 {
     Control^ targetLayout = safe_cast<Button^>(sender)->Parent;
@@ -471,4 +466,22 @@ System::Void Project::FamilyEditWindow::onFamilyMemberEditButtonClick(System::Ob
 
     labelToUpdate->Text =
         gcnew String(std::string(this->family.getChild(targetChildId).getName()).c_str());
+}
+
+System::Void Project::FamilyEditWindow::onPetEditButtonClick(System::Object^ sender, System::EventArgs^ e)
+{
+    Control^ targetLayout = safe_cast<Button^>(sender)->Parent;
+
+    int targetPetId = this->petsPanel->Controls->GetChildIndex(targetLayout);
+    Pet targetPet = this->family.getPet(targetPetId);
+
+    std::thread familyEditWindowProcess(invokePetEditWindow, std::ref(targetPet));
+    familyEditWindowProcess.join();
+    this->family.setPet(targetPet, targetPetId);
+
+    Control^ labelToUpdate =
+        this->petsPanel->Controls[targetPetId]->Controls->Find("petName", false)[0];
+
+    labelToUpdate->Text =
+        gcnew String(std::string(this->family.getPet(targetPetId).getName()).c_str());
 }

@@ -3,6 +3,7 @@
 #include "Date.h"
 #include "Name.h"
 #include "PhoneNumber.h"
+#include "Serializable.h"
 
 using json = nlohmann::json;
 
@@ -19,7 +20,7 @@ namespace Project {
 		FEMALE,
 	};
 
-	class FamilyMember
+	class FamilyMember : public Serializable
 	{
 	private:
 

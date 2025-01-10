@@ -3,12 +3,13 @@
 #include <algorithm>
 
 #include "json.hpp"
+#include "Serializable.h"
 
 using json = nlohmann::json;
 
 namespace Project {
 
-	class PhoneNumber
+	class PhoneNumber : public Serializable
 	{
 	private:
 
@@ -30,7 +31,7 @@ namespace Project {
 		operator std::string() const { return (this->phoneNumber == "missing") ? this->phoneNumber : "+38" + this->phoneNumber; }
 		std::ostream& operator<<(std::ostream& out) const { return out << std::string(*this); }
 
-		json serialize() const;
+		virtual json serialize() const;
 	};
 }
 

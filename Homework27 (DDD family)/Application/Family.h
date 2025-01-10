@@ -4,10 +4,11 @@
 #include "FamilyMember.h"
 #include "Parent.h"
 #include "Child.h"
+#include "Serializable.h"
 
 namespace Project {
 
-	class Family
+	class Family : public Serializable
 	{
 	private:
 
@@ -30,6 +31,8 @@ namespace Project {
 			const std::string& familyName);
 		explicit Family(const json& serializedObject);
 		
+		int getId() const { return this->id; }
+
 		void setName(const std::string& name);
 		std::string getName() const { return this->familyName; }
 
@@ -49,7 +52,7 @@ namespace Project {
 		void deletePet(int id);
 		Pet getPet(size_t id) const { return this->pets[id]; }
 
-		json serialize() const;
+		virtual json serialize() const;
 	};
 }
 

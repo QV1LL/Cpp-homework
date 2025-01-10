@@ -20,6 +20,14 @@ namespace Project {
 	protected:
 		~MenuWindow()
 		{
+			DataSaver* dataSaver = DataSaver::getInstance(*this->saveFolder);
+			dataSaver->deleteOldSavings();
+
+			for (const auto& family : *this->families)
+				dataSaver->save(family, family.getId());
+
+			delete this->saveFolder;
+
 			if (components)
 			{
 				delete components;
@@ -31,6 +39,7 @@ namespace Project {
 		System::Windows::Forms::Panel^ familyPanel;
 		System::ComponentModel::Container ^components;
 		std::vector<Family>* families;
+		std::string* saveFolder;
 
 #pragma region Windows Form Designer generated code
 		void InitializeComponent(void);

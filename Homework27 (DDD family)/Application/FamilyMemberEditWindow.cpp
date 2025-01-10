@@ -191,6 +191,67 @@ void Project::FamilyMemberEditWindow::InitializeComponent(void)
     this->surnameTextBox->TextChanged += 
         gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
     // 
+    // Additional
+    //
+
+    if (dynamic_cast<Project::Parent*>(this->familyMember))
+    {
+        Label^ jobLabel = gcnew Label();
+        jobLabel->AutoSize = true;
+        jobLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+            static_cast<System::Byte>(0)));
+        jobLabel->Location = System::Drawing::Point(12, 386);
+        jobLabel->Name = L"jobLabel";
+        jobLabel->Size = System::Drawing::Size(124, 25);
+        jobLabel->TabIndex = 9;
+        jobLabel->Text = L"Job";
+
+        TextBox^ jobTextBox = gcnew TextBox();
+        jobTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+            static_cast<System::Byte>(0)));
+        jobTextBox->Location = System::Drawing::Point(12, 414);
+        jobTextBox->Name = L"jobTextBox";
+        jobTextBox->Size = System::Drawing::Size(342, 26);
+        jobTextBox->TabIndex = 10;
+        jobTextBox->Text =
+            gcnew System::String(std::string(dynamic_cast<Project::Parent*>(this->familyMember)->getJob()).c_str());
+        jobTextBox->TextChanged +=
+            gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
+
+        this->Controls->Add(jobLabel);
+        this->Controls->Add(jobTextBox);
+    }
+
+    else if (dynamic_cast<Project::Child*>(this->familyMember))
+    {
+        Label^ educationPlaceLabel = gcnew Label();
+        educationPlaceLabel->AutoSize = true;
+        educationPlaceLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+            static_cast<System::Byte>(0)));
+        educationPlaceLabel->Location = System::Drawing::Point(12, 386);
+        educationPlaceLabel->Name = L"educationPlaceLabel";
+        educationPlaceLabel->Size = System::Drawing::Size(124, 25);
+        educationPlaceLabel->TabIndex = 9;
+        educationPlaceLabel->Text = L"Education place";
+
+        TextBox^ educationPlaceTextBox = gcnew TextBox();
+        educationPlaceTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+            static_cast<System::Byte>(0)));
+        educationPlaceTextBox->Location = System::Drawing::Point(12, 414);
+        educationPlaceTextBox->Name = L"educationPlaceTextBox";
+        educationPlaceTextBox->Size = System::Drawing::Size(342, 26);
+        educationPlaceTextBox->TabIndex = 10;
+        educationPlaceTextBox->Text =
+            gcnew System::String(std::string(dynamic_cast<Project::Child*>(this->familyMember)->getEducationPlaceTitle()).c_str());
+        educationPlaceTextBox->TextChanged +=
+            gcnew System::EventHandler(this, &FamilyMemberEditWindow::onTextChanged);
+
+        this->Controls->Add(educationPlaceLabel);
+        this->Controls->Add(educationPlaceTextBox);
+    }
+
+
+    // 
     // FamilyMemberEditWindow
     // 
     this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -270,6 +331,14 @@ System::Void Project::FamilyMemberEditWindow::onTextChanged(System::Object^ send
             this->familyMember->setNationality(
                 context.marshal_as<std::string>(control->Text)
             );
+
+        else if (control->Name == gcnew System::String("jobTextBox"))
+            dynamic_cast<Project::Parent*>(this->familyMember)
+            ->setJob(context.marshal_as<std::string>(control->Text));
+
+        else if (control->Name == gcnew System::String("educationPlaceTextBox"))
+            dynamic_cast<Project::Child*>(this->familyMember)
+            ->setEducationPlace(context.marshal_as<std::string>(control->Text));
     }
     catch (System::Exception^ e)
     {

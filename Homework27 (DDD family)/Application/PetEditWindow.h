@@ -5,50 +5,45 @@ namespace Project {
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
-	using namespace System::Collections::Generic;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	public ref class FamilyMemberEditWindow : public System::Windows::Forms::Form
+	public ref class PetEditWindow : public System::Windows::Forms::Form
 	{
 	public:
-		FamilyMemberEditWindow(FamilyMember& familyMember)
-			: familyMember(&familyMember)
+		PetEditWindow(Pet& familyMember)
+			: pet(&familyMember)
 		{
 			InitializeComponent();
 		}
 
 	protected:
-		~FamilyMemberEditWindow()
+		~PetEditWindow()
 		{
 			if (components)
 			{
 				delete components;
 			}
 		}
-	private: 
+	private:
 
 		System::Windows::Forms::TextBox^ nameTextBox;
-		System::Windows::Forms::TextBox^ surnameTextBox;
 
 		System::Windows::Forms::Label^ birthDateLabel;
 		System::Windows::Forms::NumericUpDown^ day;
 		System::Windows::Forms::NumericUpDown^ month;
 		System::Windows::Forms::NumericUpDown^ year;
 
-		System::Windows::Forms::TextBox^ phoneNumberTextBox;
-		System::Windows::Forms::Label^ phoneNumberLabel;
+		System::Windows::Forms::Label^ petTypeLabel;
+		System::Windows::Forms::TextBox^ petTypeTextBox;
 
-		System::Windows::Forms::Label^ genderLabel;
-		System::Windows::Forms::TextBox^ genderTextBox;
+		System::Windows::Forms::Label^ weightLabel;
+		System::Windows::Forms::TextBox^ weight;
 
-		System::Windows::Forms::Label^ nationalityLabel;
-		System::Windows::Forms::TextBox^ nationalityTextBox;
-	 
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
-		FamilyMember* familyMember;
+		Pet* pet;
 
 #pragma region Windows Form Designer generated code
 

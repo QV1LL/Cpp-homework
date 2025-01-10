@@ -65,6 +65,8 @@ namespace Project {
 
 	private: System::Void onFamilyMemberEditButtonClick(System::Object^ sender, System::EventArgs^ e);
 
+	private: System::Void onPetEditButtonClick(System::Object^ sender, System::EventArgs^ e);
+
 	private: System::Void onFamilyNameTextChanged(System::Object^ sender, System::EventArgs^ e);
 
 	};
