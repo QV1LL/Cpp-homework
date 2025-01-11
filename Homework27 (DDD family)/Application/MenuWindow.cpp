@@ -28,7 +28,7 @@ using namespace Project;
 void fixLayoutAfterDelete(Panel^ panel, int panelSize, int deleteId);
 
 [STAThreadAttribute]
-int main(HINSTANCE, HINSTANCE, LPSTR, int) {
+int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Application::EnableVisualStyles();
     Application::SetCompatibleTextRenderingDefault(false);
 	MenuWindow^ menuWindow = gcnew MenuWindow();
