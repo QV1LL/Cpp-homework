@@ -23,11 +23,13 @@ Project::Family::Family(const json& serializedObject)
 	familyName(serializedObject["family_name"])
 
 {
-	for (auto [key, value] : serializedObject["children"].items())
-		this->childs.push_back(Child(value));
+	if (serializedObject.contains("children"))
+		for (auto [key, value] : serializedObject["children"].items())
+			this->childs.push_back(Child(value));
 
-	for (auto [key, value] : serializedObject["pets"].items())
-		this->pets.push_back(Pet(value));
+	if (serializedObject.contains("pets"))
+		for (auto [key, value] : serializedObject["pets"].items())
+			this->pets.push_back(Pet(value));
 
 	this->id = Family::ID_COUNTER++;
 }
