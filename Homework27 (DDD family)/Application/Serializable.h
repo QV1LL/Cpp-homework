@@ -3,7 +3,7 @@
 using json = nlohmann::json;
 
 // interface for serializabe object
-class Serializable
+class ISerializable
 {
 public:
 

@@ -20,7 +20,7 @@ namespace Project {
 		FEMALE,
 	};
 
-	class FamilyMember : public Serializable
+	class FamilyMember : public ISerializable
 	{
 	private:
 

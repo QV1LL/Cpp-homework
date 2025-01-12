@@ -32,7 +32,7 @@ void DataSaver::deleteOldSavings() const
 		std::filesystem::remove(entry.path());
 }
 
-void DataSaver::save(const Serializable& serializableObject, uint16_t savingId)
+void DataSaver::save(const ISerializable& serializableObject, uint16_t savingId)
 {
 	std::fstream file(folderPath + "/saving" + std::to_string(savingId) + ".json", std::ios::out);
 	file << serializableObject.serialize();

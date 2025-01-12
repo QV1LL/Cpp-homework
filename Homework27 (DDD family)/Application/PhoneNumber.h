@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 namespace Project {
 
-	class PhoneNumber : public Serializable
+	class PhoneNumber : public ISerializable
 	{
 	private:
 

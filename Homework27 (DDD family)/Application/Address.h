@@ -7,7 +7,7 @@ using json = nlohmann::json;
 
 namespace Project {
 
-	class Address : public Serializable
+	class Address : public ISerializable
 	{
 	private:
 

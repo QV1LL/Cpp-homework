@@ -8,7 +8,7 @@
 
 namespace Project {
 
-	class Family : public Serializable
+	class Family : public ISerializable
 	{
 	private:
 

@@ -16,6 +16,6 @@ public:
 	static DataSaver* getInstance(const std::string& folderPath);
 
 	void deleteOldSavings() const;
-	void save(const Serializable& serializableObject, uint16_t savingCount);
+	void save(const ISerializable& serializableObject, uint16_t savingCount);
 };
 

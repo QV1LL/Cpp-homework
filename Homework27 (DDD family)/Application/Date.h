@@ -9,7 +9,7 @@ namespace Project {
 
 	int getCurrentYear();
 
-	class Date : public Serializable
+	class Date : public ISerializable
 	{
 	private:
 
