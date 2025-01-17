@@ -63,5 +63,10 @@ int main()
 		file << shape->serialize();
 	}
 
+	Equation* equation = new LinearEquation(-23, -25);
+
+	for (float& value : equation->getRoots())
+		std::cout << value << "\n";
+
 	return 0;
 }
