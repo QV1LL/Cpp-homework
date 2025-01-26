@@ -25,3 +25,18 @@ auto String::enter() -> void {
 
 	String::countOfCreatedInstance++;
 }
+
+// And here is move constructor, homework 31 :)
+String::String(String&& string)
+{
+	this->text = string.text;
+	string.text = nullptr;
+}
+
+String::String(const String& string)
+{
+	this->text = new char[strlen(string.text)];
+
+	for (int i = 0; string.text[i] != '\0'; i++)
+		this->text[i] = string.text[i];
+}

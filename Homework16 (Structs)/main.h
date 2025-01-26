@@ -32,6 +32,17 @@ public:
 		this->collectionSize = size;
 	}
 
+
+	// Here is move constructor. Homework 31 :)
+	Collection(Collection&& collection)
+	{
+		this->collectionSize = collection.collectionSize;
+		this->collection = collection.collection;
+
+		collection.collection = nullptr;
+		collection.collectionSize = 0;
+	}
+
 	auto append(T item) -> void {
 		T* pOldArray = this->collection;
 		T* newArray = new T[this->collectionSize + 1];

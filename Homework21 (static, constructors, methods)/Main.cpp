@@ -14,7 +14,12 @@ int main() {
 	String myString = String();
 	myString.enter();
 
-	myStrings.push_back(myString);
+	String other{ std::move(myString) };
+	std::cout << "My String: ";
+	myString.print();
+	std::cout << '\n';
+
+	myStrings.push_back(other);
 
 	for (String string : myStrings) {
 		string.print();
