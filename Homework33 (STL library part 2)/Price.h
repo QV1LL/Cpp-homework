@@ -1,0 +1,16 @@
+#pragma once
+
+class Price
+{
+private:
+
+	int fullPart;
+	int hundredthPart;
+
+public:
+
+	Price(float price);
+
+	explicit Price(int fullPart, int hundredthPart);
+};
+
