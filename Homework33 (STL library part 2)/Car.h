@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Price.h"
+#include "ProductionYear.h"
+
 enum class EngineType
 {
 	INLINE_4,

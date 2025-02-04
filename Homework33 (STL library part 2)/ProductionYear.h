@@ -6,10 +6,10 @@ private:
 	size_t year;
 
     int getCurrentYear() {
-        auto now = std::chrono::system_clock::now();
-        std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-        std::tm* parts = std::localtime(&now_c);
-        return 1900 + parts->tm_year;
+        using namespace std::chrono;
+        auto now = system_clock::now();
+        auto nowTime = year_month_day{ floor<days>(now) };
+        return static_cast<int>(nowTime.year());
     }
 
 public:

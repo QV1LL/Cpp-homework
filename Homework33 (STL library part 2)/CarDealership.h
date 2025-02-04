@@ -20,5 +20,9 @@ public:
     void addCar(const Car& car) { cars.push_back(car); }
     Car& getCarById(int carId);
     void deleteCarById(int carId);
+    void displayCars() const;
+
+    void sortCarsByProductYear();
+    void sortCarsByPrice();
 };
 
